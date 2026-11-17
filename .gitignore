@@ -1,0 +1,2 @@
+# Finder 會留 .DS_Store；publish 用 git add -A，不擋會推上公開 repo，也會讓守門誤判「尚未發布」
+.DS_Store
