@@ -64,6 +64,8 @@ h2 .sp{flex:1}
 .chkl .y{color:var(--good)}.chkl .b{color:var(--accent)}.chkl .n{color:var(--muted)}
 .empty.big{padding:40px 10px;text-align:center;color:var(--muted)}
 .mrow .sym .code{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+/* 數值格裡的日期要自己一行；接在數字後面會把隔壁格擠掉（模擬倉「成交 110.39 2026-11-11」踩過） */
+.stats .v .code{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em;margin-top:1px}
 .fortune .lv{letter-spacing:.08em}
 </style>
 </head>
@@ -128,6 +130,8 @@ var S={
   D:{}, CX:{}, PX:{}, WX:{},
   hold: LS.get('sx.hold',{us:[],tw:[]}),        /* 我的持股：只存在這支手機 */
   wx:   LS.get('sx.wx',{us:[],tw:[]}),          /* 自己加的觀察標的 */
+  paper:LS.get('sx.paper',{us:[],tw:[]}),       /* 模擬倉：同上，不上雲 */
+  psub: LS.get('sx.psub','open'),
   pf:{side:'all',age:'all',scope:'all',q:''},
   cf:{v:'act',scope:'all',q:''},
   flip:false, drawn:null
@@ -348,15 +352,106 @@ function renderDraw(){
   P.push('<div class="setrow" style="margin:0 2px 12px"><button class="btn pri" id="btnDo" type="button">'+(S.drawn?'再抽一檔':'抽一檔')+'</button>'+(S.drawn?'<button class="btn" id="btnOpen" type="button">看完整詳情</button>':'')+'</div>');
   if(S.drawn){var x=cciOf(S.drawn),p=(S.PX[S.mkt]||{})[S.drawn],w=(S.WX[S.mkt]||{})[S.drawn];
     P.push('<div class="drawcard">'+(w?watchCard(w):'<div class="card" data-open="'+esc(S.drawn)+'" role="button"><div class="whead"><span class="wsym">'+showNm(S.drawn)+badges(S.drawn)+'</span></div><div class="wprice">'+fmt(x.c)+'</div><div class="stats">'+kvc('距月線',sgn(x.dev)+'%',cl(x.dev))+(p?kv('位階',fmt(p.p))+kv('量比',fmt(p.v)):'')+'</div>'+(p?'<div class="tags">'+dim6(p.dm)+' <span class="pill '+(p.side==='多'?'long':'short')+'">'+esc(p.s)+' '+esc(p.side)+'</span></div>':'')+'</div>')+cciCard(S.drawn)+'</div>');
-    P.push('<div class="hint">「跟單」進模擬倉在 v1.5 推出。</div>')}
+    P.push('<div class="acts" style="margin:0 2px 10px">'+pBtn(S.drawn)+'</div>')}
   P.push('<div class="disc">規則判定結果，不構成投資建議。</div>');
   $('#pg-draw').innerHTML=P.join('');
   $('#btnDo').addEventListener('click',function(){if(!pool.length){toast('今天沒有可動作的標的');return}var pick=pool[Math.floor(Math.random()*pool.length)];S.drawn=pick.id;renderDraw();window.scrollTo(0,0)});
   var o=$('#btnOpen');if(o)o.addEventListener('click',function(){openDetail(S.drawn)});
 }
 
-/* ═══════════ 模擬倉（v1.5） ═══════════ */
-function renderPaper(){$('#pg-paper').innerHTML='<h2>模擬倉</h2><div class="empty big">v1.5 推出。<br><br>跟著訊號「假裝」進出場，成交價用下一個交易日開盤、成本照各市場費率，全部存在這支手機。</div>'}
+/* ═══════════ 模擬倉 ═══════════
+   規則貼著回測：成交價一律是「下一個交易日開盤」，成本照各市場來回費率，每筆等權。
+   成交怎麼來：今天跟單只記下當下的訊號日；明天排程產出新的 payload，裡面帶的就是
+   明天的開盤價 —— settle() 用它把「待成交」補成實際成交。出場同理。
+   所以「待成交」不是 bug，是忠實反映「訊號出來的當下你還買不到」。            */
+var BM={us:'SPY',tw:'^TWII'},BMNM={us:'SPY',tw:'加權指數'};
+function papers(){return S.paper[S.mkt]||(S.paper[S.mkt]=[])}
+function savePaper(){LS.set('sx.paper',S.paper)}
+function feeRate(){return ((M()||{}).meta||{}).fee_rate||0}
+function pStat(t){return !t.fill?'pending':(!t.exitSig?'open':(!t.exit?'closing':'closed'))}
+function openTrade(id){var a=papers().filter(function(t){return t.id===id&&pStat(t)!=='closed'});return a[0]||null}
+function lastPx(id){var x=cciOf(id);if(x&&x.c!=null)return x.c;var p=(S.PX[S.mkt]||{})[id];if(p&&p.c!=null)return p.c;var w=(S.WX[S.mkt]||{})[id];return w&&w.c!=null?w.c:null}
+function pRet(t){if(!t.fill||!t.exit)return null;return (t.exit/t.fill-1)*100-feeRate()}
+function pUnreal(t){var c=lastPx(t.id);if(!t.fill||c==null)return null;return (c/t.fill-1)*100-feeRate()}
+function pBm(t){if(t.bmIn&&t.bmOut)return (t.bmOut/t.bmIn-1)*100;return null}
+/* 成交結算：只在「payload 的訊號日已經晚於跟單／出場那天」且該檔有開盤價時才成交 */
+function settle(){
+  var m=M();if(!m)return 0;var o=m.opens||{},bm=o[BM[S.mkt]],n=0;
+  papers().forEach(function(t){
+    if(!t.fill&&m.date>t.sig&&o[t.id]!=null){t.fill=o[t.id];t.fillDate=m.date;if(bm)t.bmIn=bm;n++}
+    if(t.fill&&t.exitSig&&!t.exit&&m.date>t.exitSig&&o[t.id]!=null){t.exit=o[t.id];t.exitDate=m.date;if(bm)t.bmOut=bm;n++}
+  });
+  if(n)savePaper();return n;
+}
+function follow(id){
+  var m=M();if(!m)return;
+  if(openTrade(id)){toast('這一檔已經在模擬倉裡');return}
+  var x=cciOf(id),p=(S.PX[S.mkt]||{})[id];
+  papers().push({id:id,nm:nameOf(id),sig:m.date,why:(x&&x.k==='g'?'CCI 金叉':(p&&p.s?p.s+' '+p.side:'手動跟單')),
+    sigPx:lastPx(id),fill:null,fillDate:null,exitSig:null,exit:null,exitDate:null,bmIn:null,bmOut:null});
+  savePaper();toast('已跟單，下一個交易日開盤成交');render();
+}
+function askExit(id){
+  var m=M(),t=openTrade(id);if(!t)return;
+  if(pStat(t)==='pending'){if(!confirm('這筆還沒成交，取消跟單？'))return;S.paper[S.mkt]=papers().filter(function(z){return z!==t});savePaper();toast('已取消');render();return}
+  if(pStat(t)==='closing'){toast('已排定出場，下一個交易日開盤成交');return}
+  t.exitSig=m.date;savePaper();toast('已排定出場，下一個交易日開盤成交');render();
+}
+function pBtn(id){
+  var t=openTrade(id),x=cciOf(id),st=t?pStat(t):null;
+  if(!t)return '<button class="btn pri" data-follow="'+esc(id)+'" type="button">跟單</button>';
+  if(st==='pending')return '<button class="btn" data-exit="'+esc(id)+'" type="button">待成交・取消跟單</button>';
+  if(st==='closing')return '<button class="btn" disabled type="button">已排定出場</button>';
+  var die=x&&x.k==='d';
+  return '<button class="btn'+(die?' pri':'')+'" data-exit="'+esc(id)+'" type="button">'+(die?'死叉・建議出場':'出場')+'</button>';
+}
+function pStats(list){
+  var r=list.map(pRet).filter(function(v){return v!=null});
+  if(!r.length)return null;
+  var pos=r.filter(function(v){return v>0}),neg=r.filter(function(v){return v<0});
+  var s=r.slice().sort(function(a,b){return a-b});
+  var gp=pos.reduce(function(a,b){return a+b},0),gl=Math.abs(neg.reduce(function(a,b){return a+b},0));
+  return {n:r.length,win:100*pos.length/r.length,avg:r.reduce(function(a,b){return a+b},0)/r.length,
+          med:s[Math.floor(s.length/2)],pf:gl?gp/gl:null};
+}
+function pRow(t){
+  var st=pStat(t),u=st==='open'||st==='closing'?pUnreal(t):null,r=pRet(t),bm=pBm(t);
+  var tag={pending:'<span class="pill age">待成交</span>',open:'<span class="pill long">持倉中</span>',
+           closing:'<span class="pill age">待出場成交</span>',closed:'<span class="pill cont">已平倉</span>'}[st];
+  var v=r!=null?r:u, val=v==null?'—':sgn(v)+'%';
+  return '<div class="card"><div class="whead"><span class="wsym">'+showNm(t.id)+'</span>'+tag+'<span class="wsp"></span><span class="wchg '+cl(v)+'" style="font-size:17px;font-weight:800">'+val+'</span></div>'
+    +'<div class="stats">'+kv('跟單日',esc(t.sig))+(t.fill?kv('成交',fmt(t.fill)+' <span class="code">'+esc(t.fillDate)+'</span>'):kv('成交','下一個交易日開盤'))
+    +(t.exit?kv('出場',fmt(t.exit)+' <span class="code">'+esc(t.exitDate)+'</span>'):(st==='closing'?kv('出場','下一個交易日開盤'):(t.fill?kv('現價',fmt(lastPx(t.id))):'')))
+    +(bm!=null?kvc('同期'+BMNM[S.mkt],sgn(bm)+'%',cl(bm)):'')+'</div>'
+    +'<div class="tags"><span class="pill">'+esc(t.why)+'</span>'+(r!=null&&bm!=null?'<span class="pill '+(r>bm?'long':'short')+'">'+(r>bm?'贏大盤':'輸大盤')+' '+sgn(r-bm)+'%</span>':'')+'</div>'
+    +'<div class="acts" style="margin-top:10px">'+(st==='closed'?'<button class="btn danger" data-del="'+esc(t.id)+'|'+esc(t.sig)+'" type="button">刪除紀錄</button>':pBtn(t.id))+'<button class="btn" data-open="'+esc(t.id)+'" type="button">看詳情</button></div></div>';
+}
+function renderPaper(){
+  var m=M(),all=papers(),open=all.filter(function(t){return pStat(t)!=='closed'}),closed=all.filter(function(t){return pStat(t)==='closed'});
+  var P=[],sub=S.psub;
+  var st=pStats(closed),die=open.filter(function(t){return pStat(t)==='open'&&(cciOf(t.id)||{}).k==='d'});
+  P.push('<div class="subtabs">'+[['open','持倉中 '+open.length],['closed','已平倉 '+closed.length],['perf','績效']].map(function(a){return '<button class="chip" data-psub="'+a[0]+'" aria-pressed="'+(sub===a[0])+'">'+a[1]+'</button>'}).join('')+'</div>');
+  if(die.length&&sub!=='perf')P.push('<div class="brd hot"><span class="pill short">建議出場</span>'+die.length+' 檔已出現 CCI 死叉：'+die.map(function(t){return esc(nameOf(t.id))}).join('、')+'</div>');
+  if(sub==='open'){
+    P.push(open.length?open.map(pRow).join(''):'<div class="empty big">還沒有部位。<br><br>到「戰情板」或「抽籤」點開任一檔，按「跟單」。</div>');
+  }else if(sub==='closed'){
+    P.push(closed.length?closed.slice().reverse().map(pRow).join(''):'<div class="empty big">還沒有已平倉的紀錄。</div>');
+  }else{
+    if(!st){P.push('<div class="empty big">還沒有已平倉的交易，算不出績效。</div>')}
+    else{
+      var bms=closed.map(pBm).filter(function(v){return v!=null});
+      var bavg=bms.length?bms.reduce(function(a,b){return a+b},0)/bms.length:null;
+      P.push('<h2>已平倉 '+st.n+' 筆</h2><div class="stats">'+kvc('勝率',st.win.toFixed(1)+'%','')+kvc('平均',sgn(st.avg)+'%',cl(st.avg))+kvc('中位',sgn(st.med)+'%',cl(st.med))+kvc('獲利因子',st.pf==null?'—':st.pf.toFixed(2),st.pf>=1?'pos':'neg')+(bavg!=null?kvc('同期'+BMNM[S.mkt]+'平均',sgn(bavg)+'%',cl(bavg)):'')+'</div>');
+      var cc=(m.cci||{}).stats||{},dy=cc.day||{};
+      if(dy.pf)P.push('<div class="card"><div class="bhead"><span class="h">對照：CCI 策略回測</span></div><div class="stats">'+kv('以訊號日計',fmt(dy.n,0)+' 天')+kv('勝率',dy.win+'%')+kv('中位',sgn(dy.med)+'%')+kv('獲利因子',dy.pf)+'</div><div class="mnote" style="border:none;padding:6px 0 0;margin:0">你的樣本數還很小時，和這組數字差很多是正常的。回測本身也顯示：<b>平常中位數為負，正期望值來自少數幾次全市場底部</b>。</div></div>');
+      P.push('<div class="hint">成交價一律用<b>下一個交易日開盤</b>、每筆等權、已扣來回成本 '+feeRate()+'%，與戰情板的回測同一套規則，所以兩邊數字可以直接對照。不計滑價、不計跳空、不計部位大小。</div>');
+    }
+  }
+  P.push('<div class="disc">模擬倉不是真實交易，全部存在這支手機。用途是練習紀律：訊號出來有沒有跟、出場訊號出來有沒有走。</div>');
+  var el=$('#pg-paper');el.innerHTML=P.join('');
+  $$('[data-psub]',el).forEach(function(b){b.addEventListener('click',function(){S.psub=b.dataset.psub;LS.set('sx.psub',S.psub);renderPaper()})});
+  $$('[data-del]',el).forEach(function(b){b.addEventListener('click',function(){var a=b.dataset.del.split('|');S.paper[S.mkt]=papers().filter(function(t){return !(t.id===a[0]&&t.sig===a[1])});savePaper();renderPaper()})});
+}
 
 /* ═══════════ 設定 ═══════════ */
 function renderSettings(){
@@ -367,7 +462,7 @@ function renderSettings(){
   P.push('<h2>自己加的觀察標的</h2><div class="hint">預設觀察清單由伺服器提供；這裡加的只在你手機上顯示。</div>');
   P.push('<div class="holdlist">'+(W.length?W.map(function(i){return '<div class="holditem"><span class="hid">'+esc(i)+'</span><span class="hnm">'+esc(nameOf(i)!==i?nameOf(i):'')+'</span><button class="x" data-rmw="'+esc(i)+'" type="button" aria-label="移除">×</button></div>'}).join(''):'<div class="empty">尚未加入</div>')+'</div>');
   P.push('<div class="setrow"><input id="wid" placeholder="'+(mk==='us'?'代號':'股號')+'"><button class="btn" id="wadd" type="button">加入觀察</button></div>');
-  P.push('<h2>備份</h2><div class="hint">持股、觀察標的（兩個市場）都在這份 JSON 裡。換手機：匯出 → 貼到新手機匯入。沒有雲端。</div>');
+  P.push('<h2>備份</h2><div class="hint">持股、觀察標的與<b>模擬倉</b>（兩個市場）都在這份 JSON 裡。換手機：匯出 → 貼到新手機匯入。沒有雲端。</div>');
   P.push('<div class="setrow"><button class="btn" id="bexp" type="button">匯出到剪貼簿</button><button class="btn" id="bshow" type="button">顯示 JSON</button></div>');
   P.push('<div class="setrow"><textarea id="bjson" placeholder="貼上先前匯出的 JSON，再按匯入"></textarea></div><div class="setrow"><button class="btn" id="bimp" type="button">匯入（覆蓋）</button><button class="btn danger" id="bclr" type="button">清除這支手機的資料</button></div>');
   P.push('<h2>關於</h2><div class="hint">資料：'+esc(m.label)+' 訊號日 '+esc(m.date)+'，產生 '+esc(m.generated)+'。CCI 門檻 ±'+(m.meta||{}).cci_th+'、來回費率 '+(m.meta||{}).fee_rate+'%。<br>美股週二～六 11:00、台股週一～五 15:10（台北時間）更新。所有分析在伺服器端算好，手機不重算。</div>');
@@ -377,11 +472,11 @@ function renderSettings(){
   $$('[data-rm]',el).forEach(function(b){b.addEventListener('click',function(){S.hold[mk]=(S.hold[mk]||[]).filter(function(h){return h.id!==b.dataset.rm});save();renderSettings()})});
   $('#wadd').addEventListener('click',function(){var id=$('#wid').value.trim().toUpperCase();if(!id)return;if(mk==='tw')id=id.replace(/\.TW$/,'');W=S.wx[mk]=(S.wx[mk]||[]).filter(function(i){return i!==id});W.push(id);save();toast('已加入 '+id);renderSettings()});
   $$('[data-rmw]',el).forEach(function(b){b.addEventListener('click',function(){S.wx[mk]=(S.wx[mk]||[]).filter(function(i){return i!==b.dataset.rmw});save();renderSettings()})});
-  function dump(){return JSON.stringify({v:1,hold:S.hold,wx:S.wx})}
+  function dump(){return JSON.stringify({v:2,hold:S.hold,wx:S.wx,paper:S.paper})}
   $('#bexp').addEventListener('click',function(){var s=dump();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(function(){toast('已複製')},function(){$('#bjson').value=s;toast('無法寫入剪貼簿，已顯示在下方')})}else{$('#bjson').value=s;toast('已顯示在下方')}});
   $('#bshow').addEventListener('click',function(){$('#bjson').value=dump()});
-  $('#bimp').addEventListener('click',function(){try{var j=JSON.parse($('#bjson').value);if(!j||typeof j!=='object')throw 0;S.hold=j.hold||{us:[],tw:[]};S.wx=j.wx||{us:[],tw:[]};save();toast('已匯入');renderSettings()}catch(e){toast('JSON 格式不對')}});
-  $('#bclr').addEventListener('click',function(){if(!confirm('清除這支手機上的持股與觀察標的？'))return;S.hold={us:[],tw:[]};S.wx={us:[],tw:[]};save();toast('已清除');renderSettings()});
+  $('#bimp').addEventListener('click',function(){try{var j=JSON.parse($('#bjson').value);if(!j||typeof j!=='object')throw 0;S.hold=j.hold||{us:[],tw:[]};S.wx=j.wx||{us:[],tw:[]};S.paper=j.paper||{us:[],tw:[]};save();savePaper();toast('已匯入');renderSettings()}catch(e){toast('JSON 格式不對')}});
+  $('#bclr').addEventListener('click',function(){if(!confirm('清除這支手機上的持股與觀察標的？'))return;S.hold={us:[],tw:[]};S.wx={us:[],tw:[]};S.paper={us:[],tw:[]};save();savePaper();toast('已清除');renderSettings()});
 }
 
 /* ═══════════ 詳情頁 ═══════════ */
@@ -400,6 +495,7 @@ function openDetail(id,ri){
   B.push(cciCard(id));
   if(p)B.push('<div id="hv"><div class="load">載入逐項判定…</div></div>');
   if(w&&(w.kdt||w.mct))B.push('<div class="card"><div class="bhead"><span class="h">KD／MACD 轉向</span><span class="sp"></span>'+turnPill(w.kdt)+turnPill(w.mct)+'</div></div>');
+  B.unshift('<div class="acts" style="margin:0 2px 10px">'+pBtn(id)+'</div>');
   openSheet('<span class="sym">'+showNm(id)+'</span>'+(src.chg!=null?' <span class="wchg '+cl(src.chg)+'">'+sgn(src.chg)+'%</span>':'')+badges(id),B.join(''));
   if(p){fetchHeavy(id).then(function(j){var el=$('#hv');if(!el)return;var h=j&&(j[String(ri!=null?ri:p._i)]||j[Object.keys(j)[0]]);if(!h){el.innerHTML='<div class="load">⚠️ 沒有對應的詳情資料</div>';return}
     var items=h.why||(h.chk?String(h.chk).split('|'):[]);var P=[];
@@ -409,11 +505,20 @@ function openDetail(id,ri){
     if(h.wk&&h.wk.w)P.push('<div class="card"><div class="bhead"><span class="h">週線底部反轉</span></div><div class="fb" style="padding:0">'+esc(h.wk.w)+'</div></div>');
     el.innerHTML=P.join('')||''})}
 }
-document.addEventListener('click',function(e){var el=e.target.closest('[data-open]');if(!el||e.target.closest('button,input,a'))return;openDetail(el.dataset.open,el.dataset.ri!=null?+el.dataset.ri:null)});
+document.addEventListener('click',function(e){
+  var f=e.target.closest('[data-follow]');if(f){follow(f.dataset.follow);return}
+  var x=e.target.closest('[data-exit]');if(x){askExit(x.dataset.exit);return}
+  var ob=e.target.closest('button[data-open]');if(ob){closeSheet();stack.length=0;openDetail(ob.dataset.open);return}
+  var el=e.target.closest('[data-open]');if(!el||e.target.closest('button,input,a'))return;
+  openDetail(el.dataset.open,el.dataset.ri!=null?+el.dataset.ri:null)});
 
 /* ═══════════ 總渲染 ═══════════ */
 function render(){
+  settle();
   var m=M();$('#hd-sub').textContent=m?('訊號日 '+m.date+' ・ 產生 '+m.generated):'載入中…';
+  var nOpen=papers().filter(function(t){return pStat(t)!=='closed'}).length;
+  var nb=$('nav button[data-tab="paper"]');
+  var bd=nb.querySelector('.bdg');if(nb){if(nOpen){if(!bd){bd=document.createElement('span');bd.className='bdg';nb.appendChild(bd)}bd.textContent=nOpen}else if(bd)bd.remove()}
   ({home:renderHome,board:renderBoard,draw:renderDraw,paper:renderPaper,settings:renderSettings}[S.tab]||renderHome)();
 }
 $$('#mkseg button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.mk===S.mkt))});
