@@ -56,7 +56,7 @@ h2 .sp{flex:1}
 .brd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:0 2px 10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 .brd b{color:var(--fg)}.brd.hot{border-color:var(--bad);color:var(--fg)}
 .pill.hold{background:rgba(224,138,30,.16);color:var(--warn);border-color:rgba(224,138,30,.4)}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 70px);transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:13px;line-height:1.45;text-align:center;max-width:calc(100% - 28px);z-index:70;opacity:0;transition:opacity .2s,transform .22s cubic-bezier(.34,1.3,.64,1);pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 70px);transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:13px;line-height:1.45;text-align:center;max-width:calc(100% - 28px);z-index:90;opacity:0;transition:opacity .2s,transform .22s cubic-bezier(.34,1.3,.64,1);pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--good);color:#fff}
 .toast.warn{background:var(--warn);color:#fff}
@@ -81,6 +81,63 @@ nav .bdg.ping{animation:bdgping .85s ease}
 /* 數值格裡的日期要自己一行；接在數字後面會把隔壁格擠掉（模擬倉「成交 110.39 2026-11-11」踩過） */
 .stats .v .code{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em;margin-top:1px}
 .fortune .lv{letter-spacing:.08em}
+
+/* ── 名詞解釋：有虛線底線的字可以點 ── */
+.gl{border-bottom:1px dotted var(--accent);cursor:pointer;color:inherit}
+.gmd{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center}
+.gmd .bd{position:absolute;inset:0;background:rgba(10,14,20,.45)}
+.gmd .gcard{position:relative;width:100%;max-width:560px;max-height:78vh;display:flex;flex-direction:column;
+background:var(--card);border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.22);
+animation:gup .22s cubic-bezier(.32,.72,0,1)}
+@keyframes gup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.gmd .ghead{display:flex;align-items:center;gap:8px;padding:12px 12px 10px 16px;border-bottom:1px solid var(--line)}
+.gmd .ghead b{font-size:15px;flex:1;min-width:0}
+.gmd .gbody{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px calc(env(safe-area-inset-bottom) + 18px);font-size:13.5px;line-height:1.75}
+.gmd .gbody p{margin:0 0 10px}.gmd .gbody p:last-child{margin-bottom:0}
+.gmd .gnum{font-variant-numeric:tabular-nums}
+.gmd .gitem{padding:10px 0;border-bottom:1px dashed var(--line)}
+.gmd .gitem:last-child{border-bottom:none}
+.gmd .gitem>b{display:block;margin-bottom:1px;font-size:14px}
+.gmd .gmore{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.glhint{font-size:12px;color:var(--muted);text-align:center;margin:0 2px 12px;line-height:1.6}
+
+/* ── 首次啟動導覽 ── */
+.onb{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;
+padding:calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 16px)}
+.onb .pgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.onb .op{display:none}.onb .op.on{display:block}
+.onb .ic{font-size:38px;line-height:1}
+.onb h3{font-size:21px;margin:10px 0 4px;letter-spacing:-.3px}
+.onb .sub{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.7}
+.onb .li{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;line-height:1.7}
+.onb .li:last-child{border-bottom:none}
+.onb .li .e{flex:0 0 26px;font-size:17px;text-align:center;line-height:1.5}
+.onb .li b{display:block}
+.onb .box{margin-top:14px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;
+background:var(--inset);font-size:12.5px;color:var(--muted);line-height:1.75}
+.onb .box b{color:var(--fg)}
+.onb .foot{display:flex;align-items:center;gap:8px;padding-top:14px}
+.onb .dots{display:flex;gap:6px;flex:1;align-items:center}
+.onb .dots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:block;transition:width .2s,background .2s}
+.onb .dots i.on{background:var(--accent);width:18px;border-radius:999px}
+
+/* ── 歷史籤 ── */
+.hrow{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);
+border-radius:12px;background:var(--card);margin-bottom:6px;cursor:pointer}
+.hrow .hd{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.hrow .hl{font-size:11.5px;font-weight:800;letter-spacing:.06em;padding:1px 7px;border-radius:999px;flex:0 0 auto}
+.hrow .hl.up{background:rgba(46,158,91,.15);color:var(--good)}
+.hrow .hl.down{background:rgba(217,75,75,.15);color:var(--bad)}
+.hrow .hl.mid{background:rgba(224,138,30,.15);color:var(--warn)}
+.hrow .hl.odd{background:rgba(123,83,198,.16);color:var(--accent2)}
+.hrow .hn{font-size:13.5px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hrow .hx{color:var(--muted);font-size:12px;flex:0 0 auto}
+.hdet{padding:2px 12px 12px;margin:-4px 0 8px;font-size:12.5px;line-height:1.75;color:var(--muted);
+border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;background:var(--card)}
+.hdet b{color:var(--fg)}
+.hsum{display:flex;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:0 2px 10px;
+padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.hsum b{color:var(--fg)}
 </style>
 </head>
 <body>
@@ -122,6 +179,12 @@ nav .bdg.ping{animation:bdgping .85s ease}
   <div class="shead"><button class="ibtn" id="dClose" type="button" aria-label="返回">&#8592;</button><div class="ttl" id="dTtl"></div></div>
   <div class="sbody" id="dBody"></div>
 </div>
+<div class="gmd" id="gmodal" hidden><div class="bd" id="gbd"></div>
+  <div class="gcard" role="dialog" aria-modal="true" aria-labelledby="gTtl">
+    <div class="ghead"><b id="gTtl"></b><button class="ibtn" id="gClose" type="button" aria-label="關閉">&times;</button></div>
+    <div class="gbody" id="gBody"></div>
+  </div></div>
+<div class="onb" id="onb" hidden></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -160,6 +223,9 @@ var S={
   pf:{side:'all',age:'all',scope:'all',q:''},
   cf:{v:'act',scope:'all',q:''},
   buzz: LS.get('sx.buzz',true),                 /* 震動回饋，可在設定頁關掉 */
+  hist: LS.get('sx.hist',{us:[],tw:[]}),        /* 歷史籤：每個訊號日一筆，同樣只存這支手機 */
+  glseen:LS.get('sx.glseen',false),             /* 點過任一個名詞解釋了沒 */
+  histAll:false, histOpen:null,
   flip:false, drawn:null
 };
 function M(){return S.D[S.mkt]||null}
@@ -228,12 +294,162 @@ function cciCard(id){
   function px(v,kd){return v==null?'—':fmt(v)+(kd==='hit'?'（今日已觸發）':'')}
   var h=holdOf(id),pnl='';
   if(h&&h.cost>0&&x.c)pnl=kvc('依我的成本',sgn((x.c/h.cost-1)*100)+'%',cl(x.c/h.cost-1));
-  return '<div class="card"><div class="bhead"><span class="h">CCI 門檻</span><span class="sp"></span><span class="pill'+(x.k==='g'?' long':(x.k==='d'?' short':''))+'">'+esc(k)+'</span>'+(x.pine?'<span class="cfb">✓三條件</span>':'')+'</div>'
-    +'<div class="kv">'+kv('進場價（觸發金叉）',px(x.ent,x.entk))+kv('止損價（觸發死叉）',px(x.sl,x.slk))+kv('距門檻',sgn(x.gap)+'%')+kv('CCI_A',fmt(x.a,1))+kv('均線 SMA',fmt(x.sma,1))+kv('CCI_B',fmt(x.b,1))+pnl+'</div>'
+  return '<div class="card"><div class="bhead"><span class="h">'+gl('cci','CCI')+' 門檻</span><span class="sp"></span><span class="pill'+(x.k==='g'?' long':(x.k==='d'?' short':''))+'">'+gl('cross',esc(k))+'</span>'+(x.pine?'<span class="cfb">'+gl('pine','✓三條件')+'</span>':'')+'</div>'
+    +'<div class="kv">'+kv(gl('ent','進場價')+'（觸發金叉）',px(x.ent,x.entk))+kv(gl('slp','止損價')+'（觸發死叉）',px(x.sl,x.slk))+kv(gl('gap','距門檻'),sgn(x.gap)+'%')+kv(gl('cci_a','CCI_A'),fmt(x.a,1))+kv(gl('sma','均線 SMA'),fmt(x.sma,1))+kv(gl('cci_b','CCI_B'),fmt(x.b,1))+pnl+'</div>'
     +'<div class="mnote" style="border:none;padding:6px 0 0;margin:0">兩者互斥，每根只有一側是「活的」。這是<b>收盤價門檻</b>不是盤中停損單——明日收盤跌破才觸發死叉、後日開盤才出場；門檻每天重算會移動。</div></div>';
 }
 function chkList(items){if(!items||!items.length)return '';return '<ul class="chkl">'+items.map(function(w){var c={'✓':'y','⊙':'b'}[String(w)[0]]||'n';return '<li class="'+c+'">'+esc(w)+'</li>'}).join('')+'</ul>'}
 function turnPill(o){if(!o||!o.s)return '';var c={'轉多':'long','轉空':'short','分歧':'mix'}[o.s]||'cont';return '<span class="pill '+c+(o.e?' ev':'')+'">'+esc(o.k||o.s)+'</span>'}
+
+/* ═══════════ 名詞解釋 ═══════════
+   文案裡的 {xxx} 由 glVars() 依當前市場填入，所以美股看到 ±50、台股看到 ±100。 */
+var GLOSS={
+fortune:['籤的等級','四個等級<b>完全由既有規則決定</b>，不另外加任何邏輯：<b>奇籤</b>＝CCI 廣度越過門檻（全市場超賣）；<b>上籤</b>＝大盤多方格局且多方訊號順勢；<b>下籤</b>＝大盤空方格局；其餘都是<b>中籤</b>。按卡片上的「為什麼？」可以看到當天是哪一條成立。'],
+regime:['大盤格局','四個指數各自判多／空／盤整，加權投票得到的綜合方向。這是決定籤的等級的第一個輸入。'],
+vote:['票數','四個指數投票的加總。正值偏多、負值偏空，絕對值越大代表四個指數的方向越一致。'],
+gate:['順勢／逆勢','拿個股訊號的方向去對大盤格局：方向一致叫順勢，相反叫逆勢。同一個買進訊號在順勢與逆勢環境下的期望值差很多，所以分開標示。'],
+breadth:['CCI 廣度','今天有幾檔同時出現通過三條件的 CCI 金叉。它量的是<b>整個市場</b>有多少檔同時被打到超賣，不是個股強弱。{mk}目前的警示門檻是 ≥<span class="gnum">{cut}</span> 檔。'],
+pct:['百分位','今天的廣度在歷史所有交易日裡排第幾。第 90 百分位＝比過去九成的日子都多。'],
+hot:['全市場超賣（奇籤）','廣度越過 ≥<span class="gnum">{cut}</span> 檔的日子。{mk}歷史上只出現 <span class="gnum">{hotd}</span> 次（年約 {per} 次），那些日子的交易平均 {hotavg}%。回測顯示這套訊號的正期望值幾乎都來自這少數幾天——<b>平常日子的報酬中位數是負的</b>。'],
+act:['可動作','距離觸發門檻在 {act}% 以內的檔數，也就是明後天比較可能真的穿越的那些。抽籤只從這個範圍抽。'],
+cci:['CCI','Commodity Channel Index。這裡用的是 <b>MAD 版本</b>：(價格 − n 日均) ÷ (0.015 × n 日平均絕對偏差)，價格取 hlc3＝(最高＋最低＋收盤)÷3。和用標準差算的版本結果不一樣。'],
+cci_a:['CCI_A','{la} 期的 CCI，是<b>快線</b>，金叉死叉都看它。{mk}的門檻是 ±{th}：低於 −{th} 是超賣區、高於 +{th} 是超買區。'],
+cci_b:['CCI_B','{lb} 期的 CCI，是<b>慢線</b>，代表比較長期的位置。金叉要求 CCI_A 在 CCI_B 之上，死叉相反。'],
+sma:['均線 SMA','CCI_A 自己的 {sml} 日移動平均。金叉＝CCI_A 由下往上穿過這條線。'],
+cross:['金叉／死叉','金叉＝CCI_A 向上穿過它的 {sml} 日均線；死叉＝向下穿過。單看穿越還不夠，要三個條件同時成立才算完整訊號。'],
+pine:['三條件','完整的金叉要同時滿足：① CCI_A 向上穿過自己的均線 ② CCI_A 仍低於 −{th}（還在超賣區，不是追高）③ CCI_A 在 CCI_B 之上。死叉是對稱的三條件。只有標了「✓三條件」的才是完整訊號。'],
+ent:['進場價','反解出來的價格：明天如果<b>收在</b>這個價以上，金叉就會成立。這是收盤價門檻，不是盤中掛單價；而且門檻每天重算，會移動。'],
+slp:['止損價','明天如果<b>收在</b>這個價以下，死叉就會成立。和進場價互斥——每根 K 線只有一側是「活的」。'],
+gap:['距門檻','現價離觸發價還差幾 %。{mk}只收錄 {band}% 以內的檔，超過就不列。'],
+dim6:['六面向','趨（趨勢）、位（位階）、K（KD）、均（均線）、量（量能）、指（指標）六項檢核，是六大策略共用的體質檢查。點開個股可以看逐項的判定理由。'],
+dev:['距月線','現價和 20 日均線（月線）差幾 %。正值代表在月線之上。'],
+pos:['位階','現價在過去 52 週高低區間的相對位置。0＝一年最低、1＝一年最高。'],
+vr:['量比','今天的成交量除以近期平均量。大於 1 表示放量。'],
+rs:['相對大盤','近 20 日個股報酬減掉同期大盤報酬。正值代表這段期間跑贏大盤。'],
+align:['均線排列','短中長期均線的上下順序。多頭排列＝短天期在上，空頭排列相反。'],
+kdmacd:['KD／MACD 轉向','KD 與 MACD 最近是否出現轉向，以及是不是當天剛發生。兩者分歧時只是提醒，不構成訊號。'],
+sixways:['六大策略','每天掃過全池、找出符合六套進出場規則的個股。戰情板的「全池」就是這份清單，每筆都標了哪一套策略、哪個方向、幾天前發生。'],
+fill:['隔日開盤成交','模擬倉的成交規則：今天跟單，用<b>下一個交易日的開盤價</b>成交。這和回測用的是同一套規則，所以模擬倉的數字可以直接跟回測對照。'],
+fee:['來回成本','一買一賣的手續費與稅，{mk}用 {fee}%。畫面上的報酬率都已經扣掉了。'],
+pf:['獲利因子','所有賺錢交易的總獲利 ÷ 所有賠錢交易的總虧損。大於 1 才是正期望值。它對少數幾筆大獲利非常敏感，樣本少的時候別太當真。'],
+dayweight:['以訊號日計','把同一天出現的所有訊號合成一筆再算績效。因為訊號高度集中在少數幾天，逐筆計算等於把同一天重複放大：{mk}逐筆算獲利因子 {pf}，改成以天計只剩 <b>{dpf}</b>。'],
+bm:['同期大盤','同一段持有期間，{bm} 的報酬。拿來對照你的模擬倉有沒有贏過單純抱著大盤。'],
+pending:['待成交','已經跟單，但還沒到下一個交易日開盤，所以還沒有成交價。下次資料更新時會自動補上。'],
+vix:['VIX','市場波動率指數，俗稱恐慌指數。位階是它在過去 250／60 天區間裡的相對位置。'],
+mktb:['市場廣度','全市場多方標的與空方標的的比例，用來看漲跌是普遍發生，還是集中在少數幾檔。']
+};
+var GLORDER=['fortune','regime','vote','gate','breadth','pct','hot','act','sixways','dim6','cci','cci_a','cci_b','sma','cross','pine','ent','slp','gap','dev','pos','vr','rs','align','kdmacd','vix','mktb','fill','fee','pending','bm','pf','dayweight'];
+function glVars(){
+  var m=M()||{},mt=m.meta||{},cm=(m.cci||{}).meta||{},b=m.breadth||{},st=(m.cci||{}).stats||{};
+  return {mk:m.label||'',th:mt.cci_th,cut:b.cut,per:b.per_year,hotd:b.hot_days,hotavg:sgn(b.hot_avg),
+          act:cm.act,band:cm.band,la:cm.len_a,lb:cm.len_b,sml:cm.sma_len,fee:mt.fee_rate,
+          pf:st.pf,dpf:(st.day||{}).pf,bm:BMNM[S.mkt]};
+}
+function glFill(t){var v=glVars();return String(t).replace(/\{(\w+)\}/g,function(_,k){return v[k]==null?'—':v[k]})}
+/* 可點的名詞：label 省略時用詞條自己的標題 */
+function gl(k,label){return '<b class="gl" data-gl="'+k+'">'+(label||(GLOSS[k]||['?'])[0])+'</b>'}
+var glOpen=false;
+function showGmd(){
+  $('#gmodal').hidden=false;
+  if(!S.glseen){S.glseen=true;LS.set('sx.glseen',true)}
+  if(!glOpen){glOpen=true;try{history.pushState({g:1},'')}catch(e){}}
+}
+function hideGmd(){$('#gmodal').hidden=true;glOpen=false}
+function closeGloss(){if(glOpen){try{history.back();return}catch(e){}}hideGmd()}
+function openGloss(k){
+  var e=GLOSS[k];if(!e){openGlossAll();return}
+  $('#gTtl').textContent=e[0];
+  $('#gBody').innerHTML='<p>'+glFill(e[1])+'</p><div class="gmore"><button class="btn" id="gAll" type="button">看全部名詞</button></div>';
+  $('#gBody').scrollTop=0;showGmd();
+  $('#gAll').addEventListener('click',function(){openGlossAll()});
+}
+function openGlossAll(){
+  $('#gTtl').textContent='名詞解釋（'+((M()||{}).label||'')+'）';
+  $('#gBody').innerHTML=GLORDER.map(function(k){return '<div class="gitem"><b>'+GLOSS[k][0]+'</b>'+glFill(GLOSS[k][1])+'</div>'}).join('');
+  $('#gBody').scrollTop=0;showGmd();
+}
+$('#gClose').addEventListener('click',closeGloss);
+$('#gbd').addEventListener('click',closeGloss);
+
+/* ═══════════ 首次啟動導覽 ═══════════ */
+var ONB_V=1;
+var ONB=[
+ ['&#127808;','這是什麼','把你原本的兩套戰情板，美股和台股，合成一支 App。',
+  '<div class="li"><span class="e">&#9881;</span><div><b>電腦算好，手機只負責顯示</b>每天盤後跑完六大策略、CCI 門檻與大盤格局，結果存成一份資料。手機不重算，所以開啟很快，也不會因為裝置不同而得到不同答案。</div></div>'
+ +'<div class="li"><span class="e">&#127808;</span><div><b>結論濃縮成一張籤</b>上／中／下／奇四個等級，完全由既有規則決定，不另外加邏輯。</div></div>'
+ +'<div class="li"><span class="e">&#128202;</span><div><b>想看細節隨時能往下挖</b>每一張卡都可以點開，看到逐項的判定理由。</div></div>',
+  '<div class="box">⚠️ 這是<b>規則判定的結果</b>，不是投資建議。所有數字都是歷史回測與當日計算，不保證未來。</div>'],
+ ['&#128205;','四個分頁','下面那排圖示就是全部的功能。',
+  '<div class="li"><span class="e">&#127808;</span><div><b>今日籤</b>今天整體環境的一句話結論。按「為什麼？」看依據，按「抽一籤」從今天可動作的標的裡隨機抽一檔來看。</div></div>'
+ +'<div class="li"><span class="e">&#128202;</span><div><b>戰情板</b>完整的數字。四個子頁：大盤、觀察、全池、CCI。</div></div>'
+ +'<div class="li"><span class="e">&#128203;</span><div><b>模擬倉</b>看到有興趣的就按「跟單」，照回測同一套規則幫你記帳，算勝率與獲利因子。不是真實交易。</div></div>'
+ +'<div class="li"><span class="e">&#9881;</span><div><b>設定</b>持股與成本、自己加的觀察標的、備份。</div></div>',
+  '<div class="box">右上角 <b>◐</b> 切換深淺色、<b>↻</b> 重新抓當天資料。標題旁邊的 <b>美股／台股</b> 隨時可以切換，兩邊是各自獨立的。</div>'],
+ ['&#128161;','三件先知道的事','看完就可以開始了。',
+  '<div class="li"><span class="e">1</span><div><b>你的資料只在這支手機</b>持股、成本、模擬倉都存在瀏覽器裡，伺服器端完全不知道你持有什麼。換手機要用「設定 → 備份」把 JSON 搬過去。</div></div>'
+ +'<div class="li"><span class="e">2</span><div><b>成交價用下一個交易日開盤</b>今天跟單，明天開盤成交——這是回測用的同一套規則，所以模擬倉的數字可以直接跟回測對照。</div></div>'
+ +'<div class="li"><span class="e">3</span><div><b>看不懂的詞，點它</b>畫面上有<span class="gl">虛線底線</span>的名詞都可以點開解釋。</div></div>',
+  '<div class="box">歷史籤會從今天開始累積，<b>無法回填過去</b>——每天的判讀只在當天的資料裡，過去的沒有留存。明天再打開就會看到今天這支籤。</div>']
+];
+var onbI=0;
+function showOnb(){
+  onbI=0;$('#onb').hidden=false;paintOnb();
+}
+function paintOnb(){
+  var last=onbI===ONB.length-1;
+  $('#onb').innerHTML='<div class="pgs">'+ONB.map(function(o,i){
+    return '<div class="op'+(i===onbI?' on':'')+'"><div class="ic">'+o[0]+'</div><h3>'+o[1]+'</h3><p class="sub">'+o[2]+'</p>'+o[3]+o[4]+'</div>'}).join('')+'</div>'
+   +'<div class="foot"><span class="dots">'+ONB.map(function(o,i){return '<i class="'+(i===onbI?'on':'')+'"></i>'}).join('')+'</span>'
+   +(last?'<button class="btn" id="onbGl" type="button">名詞解釋</button><button class="btn pri" id="onbGo" type="button">開始使用</button>'
+         :'<button class="btn" id="onbSkip" type="button">跳過</button><button class="btn pri" id="onbNext" type="button">下一步</button>')+'</div>';
+  $('.pgs',$('#onb')).scrollTop=0;
+  if(last){
+    $('#onbGl').addEventListener('click',function(){openGlossAll()});
+    $('#onbGo').addEventListener('click',endOnb);
+  }else{
+    $('#onbSkip').addEventListener('click',endOnb);
+    $('#onbNext').addEventListener('click',function(){onbI++;paintOnb()});
+  }
+}
+function endOnb(){$('#onb').hidden=true;$('#onb').innerHTML='';LS.set('sx.onb',ONB_V)}
+/* 左右滑動換頁 */
+(function(){var x0=null;var el=$('#onb');
+  el.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  el.addEventListener('touchend',function(e){if(x0==null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(Math.abs(dx)<50)return;
+    if(dx<0&&onbI<ONB.length-1){onbI++;paintOnb()}else if(dx>0&&onbI>0){onbI--;paintOnb()}},{passive:true});
+})();
+
+/* ═══════════ 歷史籤 ═══════════
+   只能從安裝之後開始累積：每天的判讀只存在當天那份資料裡，過去的沒有留存，無法回填。 */
+function hists(){return S.hist[S.mkt]||(S.hist[S.mkt]=[])}
+function recHist(){
+  var m=M();if(!m||!m.date)return;
+  var h=hists();
+  if(h.some(function(x){return x.date===m.date}))return;
+  var f=fortune(m),r=m.regime||{},b=m.breadth||{},c=(m.cci||{}).counts||{};
+  h.push({date:m.date,lv:f.lv,nm:f.nm,cls:f.cls,poem:f.poem,why:f.why,
+          st:r.state||'',sc:r.score,bn:b.n==null?null:b.n,act:c.act||0});
+  h.sort(function(a,z){return a.date<z.date?-1:(a.date>z.date?1:0)});
+  if(h.length>120)S.hist[S.mkt]=h.slice(-120);
+  LS.set('sx.hist',S.hist);
+}
+function histBlock(){
+  var m=M(),h=hists().slice().filter(function(x){return x.date!==(m||{}).date}).reverse();
+  if(!h.length)return '<h2>歷史籤</h2><div class="hint">歷史籤從今天開始累積，只存在這支手機。明天再打開，就會在這裡看到今天這支籤。<br>（過去的籤無法回填——每天的判讀只在當天的資料裡，沒有留存。）</div>';
+  var cnt={};h.forEach(function(x){cnt[x.lv]=(cnt[x.lv]||0)+1});
+  var sum='<div class="hsum"><span>已記錄 <b>'+h.length+'</b> 天</span>'+['上籤','中籤','下籤','奇籤'].map(function(k){return cnt[k]?'<span>'+k+' <b>'+cnt[k]+'</b></span>':''}).join('')+'<span>最早 '+h[h.length-1].date+'</span></div>';
+  var show=S.histAll?h:h.slice(0,7);
+  var rows=show.map(function(x){
+    var o=S.histOpen===x.date;
+    return '<div class="hrow" data-hist="'+esc(x.date)+'"><span class="hd">'+esc(x.date.slice(5))+'</span>'
+      +'<span class="hl '+x.cls+'">'+esc(x.lv)+'</span><span class="hn">'+esc(x.nm)+'</span>'
+      +'<span class="hx">'+esc(x.st||'')+(x.bn!=null?' ・廣度 '+x.bn:'')+'</span></div>'
+      +(o?'<div class="hdet">'+esc(x.poem)+'<br>'+esc(x.why)+'<br><b>當日可動作 '+x.act+' 檔</b></div>':'');
+  }).join('');
+  return '<h2>歷史籤</h2>'+sum+rows
+    +(h.length>7?'<div class="setrow"><button class="btn" id="histMore" type="button">'+(S.histAll?'收起':'看全部 '+h.length+' 天')+'</button></div>':'');
+}
 
 /* ═══════════ 今日籤 ═══════════ */
 function fortune(m){
@@ -247,28 +463,33 @@ function renderHome(){
   var m=M();if(!m){$('#pg-home').innerHTML='<div class="empty big">載入中…</div>';return}
   var f=fortune(m),r=m.regime||{},b=m.breadth||{},c=(m.cci||{}).counts||{};
   var P=['<div class="fortune '+f.cls+'"><div class="lv">'+esc(m.label)+' ・ 訊號日 '+esc(m.date)+' ・ '+f.lv+'</div><div class="nm">'+f.nm+'</div><div class="poem">'+f.poem+'</div>'
-    +'<div class="meta">大盤 <b>'+esc(r.state||'—')+'</b>（票數 '+sgn(r.score,1)+'）｜多方訊號 '+esc((r.gate||{})['多']||'—')+'・空方訊號 '+esc((r.gate||{})['空']||'—')+'<br>CCI 廣度 <b>'+(b.n==null?'—':b.n+' 檔')+'</b>（'+esc(b.lvl||'—')+'，第 '+(b.pct==null?'—':b.pct)+' 百分位）｜今日可動作 <b>'+(c.act||0)+'</b> 檔</div>'
+    +'<div class="meta">'+gl('regime','大盤')+' <b>'+esc(r.state||'—')+'</b>（'+gl('vote','票數')+' '+sgn(r.score,1)+'）｜多方訊號 '+gl('gate',esc((r.gate||{})['多']||'—'))+'・空方訊號 '+gl('gate',esc((r.gate||{})['空']||'—'))+'<br>'+gl('breadth','CCI 廣度')+' <b>'+(b.n==null?'—':b.n+' 檔')+'</b>（'+esc(b.lvl||'—')+'，第 '+(b.pct==null?'—':b.pct)+' '+gl('pct','百分位')+'）｜今日'+gl('act','可動作')+' <b>'+(c.act||0)+'</b> 檔</div>'
     +'<div class="acts"><button class="btn" id="btnFlip" type="button">'+(S.flip?'收起依據':'為什麼？')+'</button><button class="btn pri" id="btnDraw" type="button">抽一籤</button><button class="btn" id="btnBoard" type="button">看戰情板</button></div></div>'];
-  if(S.flip){P.push('<div class="flip"><div class="card"><div class="bhead"><span class="h">這支籤的依據</span></div><div class="mnote" style="border:none;padding:4px 0 0;margin:0">'+esc(f.why)+'</div></div>'+mktTop(m,true)+'</div>')}
+  if(S.flip){P.push('<div class="flip"><div class="card"><div class="bhead"><span class="h">這支籤的依據（'+gl('fortune','等級怎麼來')+'）</span></div><div class="mnote" style="border:none;padding:4px 0 0;margin:0">'+esc(f.why)+'</div></div>'+mktTop(m,true)+'</div>')}
+  if(!S.glseen)P.push('<div class="glhint">畫面上有<span class="gl">虛線底線</span>的名詞都可以點開解釋。</div>');
   P.push('<div class="disc">籤的等級完全由既有規則決定，不加任何新邏輯。規則判定結果，不構成投資建議。</div>');
-  $('#pg-home').innerHTML=P.join('');
+  P.push(histBlock());
+  var el=$('#pg-home');el.innerHTML=P.join('');
   $('#btnFlip').addEventListener('click',function(){S.flip=!S.flip;renderHome()});
   $('#btnDraw').addEventListener('click',function(){go('draw')});
   $('#btnBoard').addEventListener('click',function(){goSub('mkt');go('board')});
+  $$('[data-hist]',el).forEach(function(b){b.addEventListener('click',function(){
+    S.histOpen=S.histOpen===b.dataset.hist?null:b.dataset.hist;renderHome()})});
+  var hm=$('#histMore');if(hm)hm.addEventListener('click',function(){S.histAll=!S.histAll;renderHome()});
 }
 
 /* ═══════════ 戰情板：大盤 ═══════════ */
 function mktTop(m,compact){
   var r=m.regime||{},b=m.breadth||{},P=[];
   var gc={'多方格局':'bull','偏多':'bull','偏空':'bear','空方格局':'bear'}[r.state]||'range';
-  P.push('<div class="hero '+gc+'"><div class="lab">大盤綜合方向</div><div class="st '+gc+'">'+esc(r.state||'—')+'</div><div class="sc">四指數票數 '+sgn(r.score,1)+'｜多 '+(r.n_bull||0)+'／空 '+(r.n_bear||0)+'／盤整 '+(r.n_range||0)+'</div>'
-    +'<div class="gates">'+['多','空'].map(function(k){var v=(r.gate||{})[k]||'—',c=v==='順勢'?'go':(v==='逆勢'?'ng':'');return '<div class="gbox"><b>'+k+'方訊號</b><div class="v '+c+'">'+esc(v)+'</div></div>'}).join('')+'</div>'
+  P.push('<div class="hero '+gc+'"><div class="lab">'+gl('regime','大盤綜合方向')+'</div><div class="st '+gc+'">'+esc(r.state||'—')+'</div><div class="sc">四指數'+gl('vote','票數')+' '+sgn(r.score,1)+'｜多 '+(r.n_bull||0)+'／空 '+(r.n_bear||0)+'／盤整 '+(r.n_range||0)+'</div>'
+    +'<div class="gates">'+['多','空'].map(function(k){var v=(r.gate||{})[k]||'—',c=v==='順勢'?'go':(v==='逆勢'?'ng':'');return '<div class="gbox"><b>'+k+'方訊號</b><div class="v '+c+'">'+gl('gate',esc(v))+'</div></div>'}).join('')+'</div>'
     +(r.why?'<div class="why">'+esc(r.why)+'</div>':'')+'</div>');
-  if(b.n!=null){P.push('<div class="brd'+(b.hot?' hot':'')+'">'+(b.hot?'<span class="pill short">全市場超賣</span>':'')+'CCI 廣度 <b>'+b.n+' 檔</b>・'+esc(b.lvl)+'・第 '+b.pct+' 百分位（中位 '+b.med+'、門檻 ≥'+b.cut+'）'
+  if(b.n!=null){P.push('<div class="brd'+(b.hot?' hot':'')+'">'+(b.hot?'<span class="pill short">'+gl('hot','全市場超賣')+'</span>':'')+gl('breadth','CCI 廣度')+' <b>'+b.n+' 檔</b>・'+esc(b.lvl)+'・第 '+b.pct+' '+gl('pct','百分位')+'（中位 '+b.med+'、門檻 ≥'+b.cut+'）'
     +(b.hot?'<span style="flex-basis:100%">歷史上只出現 '+b.hot_days+' 次（年約 '+b.per_year+' 次）；那些日子的交易平均 <b>'+sgn(b.hot_avg)+'%</b>。</span>':'')+'</div>')}
   if(compact)return P.join('');
-  if(m.vix){var v=m.vix;P.push('<h2>VIX 波動率</h2><div class="stats">'+kv('收盤',fmt(v.c))+kvc('當日',sgn(v.chg)+'%',cl(v.chg))+kv('250 日位階',v.p250+'%')+kv('60 日位階',v.p60+'%')+kv('20 日均',fmt(v.ma20))+'</div>')}
-  if(m.mkt_breadth){var x=m.mkt_breadth,ra=Number(x.ratio);P.push('<h2>市場廣度（'+esc(x.date)+'）</h2><div class="stats">'+kvc('多空比',isNaN(ra)?'—':ra.toFixed(2),ra>=1?'pos':'neg')+kv('空頭比重',x.bear+'%')+kvc('多方合計',x.bull_n,'pos')+kvc('空方合計',x.bear_n,'neg')+kv('市場強度',esc(x.score))+'</div>')}
+  if(m.vix){var v=m.vix;P.push('<h2>'+gl('vix','VIX 波動率')+'</h2><div class="stats">'+kv('收盤',fmt(v.c))+kvc('當日',sgn(v.chg)+'%',cl(v.chg))+kv('250 日位階',v.p250+'%')+kv('60 日位階',v.p60+'%')+kv('20 日均',fmt(v.ma20))+'</div>')}
+  if(m.mkt_breadth){var x=m.mkt_breadth,ra=Number(x.ratio);P.push('<h2>'+gl('mktb','市場廣度')+'（'+esc(x.date)+'）</h2><div class="stats">'+kvc('多空比',isNaN(ra)?'—':ra.toFixed(2),ra>=1?'pos':'neg')+kv('空頭比重',x.bear+'%')+kvc('多方合計',x.bull_n,'pos')+kvc('空方合計',x.bear_n,'neg')+kv('市場強度',esc(x.score))+'</div>')}
   return P.join('');
 }
 function renderMkt(){
@@ -288,8 +509,8 @@ function renderMkt(){
 function watchCard(w){
   var c=scls(w.state,w.ranging),sig=(w.sigs||[])[0];
   return '<div class="card '+c+'" data-open="'+esc(w.id)+'" role="button" tabindex="0"><div class="whead"><span class="wsym">'+showNm(w.id)+badges(w.id)+'</span><span class="mstate '+c+'">'+esc(w.state||'')+'</span><span class="wsp"></span>'+(w.hit!=null?'<span class="gr '+grcls(w.hit/(w.tot||6))+'">'+w.hit+'/'+(w.tot||6)+'</span>':'')+'</div>'
-    +'<div class="wprice">'+fmt(w.c)+' <span class="wchg '+cl(w.chg)+'">'+sgn(w.chg)+'%</span><span class="wsp"></span>'+dim6(w.dm)+'</div>'
-    +'<div class="stats">'+kvc('距月線',sgn(w.dev)+'%',cl(w.dev))+kv('位階',fmt(w.p))+kv('量比',fmt(w.v))+(w.rs20!=null?kvc('相對大盤',sgn(w.rs20,1)+'%',cl(w.rs20)):'')+(w.ma_align?kv('均線',esc(w.ma_align)):'')+cciCells(w.id)+'</div>'
+    +'<div class="wprice">'+fmt(w.c)+' <span class="wchg '+cl(w.chg)+'">'+sgn(w.chg)+'%</span><span class="wsp"></span><span data-gl="dim6">'+dim6(w.dm)+'</span></div>'
+    +'<div class="stats">'+kvc(gl('dev','距月線'),sgn(w.dev)+'%',cl(w.dev))+kv(gl('pos','位階'),fmt(w.p))+kv(gl('vr','量比'),fmt(w.v))+(w.rs20!=null?kvc(gl('rs','相對大盤'),sgn(w.rs20,1)+'%',cl(w.rs20)):'')+(w.ma_align?kv(gl('align','均線'),esc(w.ma_align)):'')+cciCells(w.id)+'</div>'
     +'<div class="tags">'+turnPill(w.kdt)+turnPill(w.mct)+(w.basis?'<span class="pill">'+esc(w.basis)+'</span>':'')+'</div>'
     +'<div class="sigline">'+(sig?'<span class="pill '+(sig.side==='多'?'long':'short')+'">'+esc(sig.s)+' '+esc(sig.side)+'</span> '+(sig.age===0?'今日':sig.age+' 日前')+' ・ '+sig.hit+'/'+sig.tot:'近 '+(M().window||5)+' 日無策略訊號')+'</div></div>';
 }
@@ -460,13 +681,13 @@ function pStats(list){
 }
 function pRow(t){
   var st=pStat(t),u=st==='open'||st==='closing'?pUnreal(t):null,r=pRet(t),bm=pBm(t);
-  var tag={pending:'<span class="pill age">待成交</span>',open:'<span class="pill long">持倉中</span>',
+  var tag={pending:'<span class="pill age">'+gl('pending','待成交')+'</span>',open:'<span class="pill long">持倉中</span>',
            closing:'<span class="pill age">待出場成交</span>',closed:'<span class="pill cont">已平倉</span>'}[st];
   var v=r!=null?r:u, val=v==null?'—':sgn(v)+'%';
   return '<div class="card"><div class="whead"><span class="wsym">'+showNm(t.id)+'</span>'+tag+'<span class="wsp"></span><span class="wchg '+cl(v)+'" style="font-size:17px;font-weight:800">'+val+'</span></div>'
-    +'<div class="stats">'+kv('跟單日',esc(t.sig))+(t.fill?kv('成交',fmt(t.fill)+' <span class="code">'+esc(t.fillDate)+'</span>'):kv('成交','下一個交易日開盤'))
+    +'<div class="stats">'+kv('跟單日',esc(t.sig))+(t.fill?kv('成交',fmt(t.fill)+' <span class="code">'+esc(t.fillDate)+'</span>'):kv('成交',gl('fill','下一個交易日開盤')))
     +(t.exit?kv('出場',fmt(t.exit)+' <span class="code">'+esc(t.exitDate)+'</span>'):(st==='closing'?kv('出場','下一個交易日開盤'):(t.fill?kv('現價',fmt(lastPx(t.id))):'')))
-    +(bm!=null?kvc('同期'+BMNM[S.mkt],sgn(bm)+'%',cl(bm)):'')+'</div>'
+    +(bm!=null?kvc(gl('bm','同期'+BMNM[S.mkt]),sgn(bm)+'%',cl(bm)):'')+'</div>'
     +'<div class="tags"><span class="pill">'+esc(t.why)+'</span>'+(r!=null&&bm!=null?'<span class="pill '+(r>bm?'long':'short')+'">'+(r>bm?'贏大盤':'輸大盤')+' '+sgn(r-bm)+'%</span>':'')+'</div>'
     +'<div class="acts" style="margin-top:10px">'+(st==='closed'?'<button class="btn danger" data-del="'+esc(t.id)+'|'+esc(t.sig)+'" type="button">刪除紀錄</button>':pBtn(t.id))+'<button class="btn" data-open="'+esc(t.id)+'" type="button">看詳情</button></div></div>';
 }
@@ -485,10 +706,10 @@ function renderPaper(){
     else{
       var bms=closed.map(pBm).filter(function(v){return v!=null});
       var bavg=bms.length?bms.reduce(function(a,b){return a+b},0)/bms.length:null;
-      P.push('<h2>已平倉 '+st.n+' 筆</h2><div class="stats">'+kvc('勝率',st.win.toFixed(1)+'%','')+kvc('平均',sgn(st.avg)+'%',cl(st.avg))+kvc('中位',sgn(st.med)+'%',cl(st.med))+kvc('獲利因子',st.pf==null?'—':st.pf.toFixed(2),st.pf>=1?'pos':'neg')+(bavg!=null?kvc('同期'+BMNM[S.mkt]+'平均',sgn(bavg)+'%',cl(bavg)):'')+'</div>');
+      P.push('<h2>已平倉 '+st.n+' 筆</h2><div class="stats">'+kvc('勝率',st.win.toFixed(1)+'%','')+kvc('平均',sgn(st.avg)+'%',cl(st.avg))+kvc('中位',sgn(st.med)+'%',cl(st.med))+kvc(gl('pf','獲利因子'),st.pf==null?'—':st.pf.toFixed(2),st.pf>=1?'pos':'neg')+(bavg!=null?kvc(gl('bm','同期'+BMNM[S.mkt]+'平均'),sgn(bavg)+'%',cl(bavg)):'')+'</div>');
       var cc=(m.cci||{}).stats||{},dy=cc.day||{};
-      if(dy.pf)P.push('<div class="card"><div class="bhead"><span class="h">對照：CCI 策略回測</span></div><div class="stats">'+kv('以訊號日計',fmt(dy.n,0)+' 天')+kv('勝率',dy.win+'%')+kv('中位',sgn(dy.med)+'%')+kv('獲利因子',dy.pf)+'</div><div class="mnote" style="border:none;padding:6px 0 0;margin:0">你的樣本數還很小時，和這組數字差很多是正常的。回測本身也顯示：<b>平常中位數為負，正期望值來自少數幾次全市場底部</b>。</div></div>');
-      P.push('<div class="hint">成交價一律用<b>下一個交易日開盤</b>、每筆等權、已扣來回成本 '+feeRate()+'%，與戰情板的回測同一套規則，所以兩邊數字可以直接對照。不計滑價、不計跳空、不計部位大小。</div>');
+      if(dy.pf)P.push('<div class="card"><div class="bhead"><span class="h">對照：CCI 策略回測</span></div><div class="stats">'+kv(gl('dayweight','以訊號日計'),fmt(dy.n,0)+' 天')+kv('勝率',dy.win+'%')+kv('中位',sgn(dy.med)+'%')+kv(gl('pf','獲利因子'),dy.pf)+'</div><div class="mnote" style="border:none;padding:6px 0 0;margin:0">你的樣本數還很小時，和這組數字差很多是正常的。回測本身也顯示：<b>平常中位數為負，正期望值來自少數幾次全市場底部</b>。</div></div>');
+      P.push('<div class="hint">成交價一律用<b>'+gl('fill','下一個交易日開盤')+'</b>、每筆等權、已扣'+gl('fee','來回成本')+' '+feeRate()+'%，與戰情板的回測同一套規則，所以兩邊數字可以直接對照。不計滑價、不計跳空、不計部位大小。</div>');
     }
   }
   P.push('<div class="disc">模擬倉不是真實交易，全部存在這支手機。用途是練習紀律：訊號出來有沒有跟、出場訊號出來有沒有走。</div>');
@@ -506,9 +727,11 @@ function renderSettings(){
   P.push('<h2>自己加的觀察標的</h2><div class="hint">預設觀察清單由伺服器提供；這裡加的只在你手機上顯示。</div>');
   P.push('<div class="holdlist">'+(W.length?W.map(function(i){return '<div class="holditem"><span class="hid">'+esc(i)+'</span><span class="hnm">'+esc(nameOf(i)!==i?nameOf(i):'')+'</span><button class="x" data-rmw="'+esc(i)+'" type="button" aria-label="移除">×</button></div>'}).join(''):'<div class="empty">尚未加入</div>')+'</div>');
   P.push('<div class="setrow"><input id="wid" placeholder="'+(mk==='us'?'代號':'股號')+'"><button class="btn" id="wadd" type="button">加入觀察</button></div>');
+  P.push('<h2>說明</h2><div class="hint">看不懂畫面上的名詞時，直接點有虛線底線的字就會跳出解釋；也可以在這裡一次看完。</div>');
+  P.push('<div class="setrow"><button class="btn" id="sGl" type="button">名詞解釋（全部）</button><button class="btn" id="sOnb" type="button">重看導覽</button></div>');
   P.push('<h2>操作回饋</h2><div class="hint">按「跟單」「出場」時，按鈕會變色停一下、下方「模擬倉」分頁會彈動，另外跳一條提示。震動只有 Android 支援——iPhone 的 Safari 沒有這個功能，只會看到變色與彈動。</div>');
   P.push('<div class="setrow"><button class="btn'+(S.buzz?' pri':'')+'" id="bzz" type="button">震動回饋：'+(S.buzz?'開':'關')+'</button></div>');
-  P.push('<h2>備份</h2><div class="hint">持股、觀察標的與<b>模擬倉</b>（兩個市場）都在這份 JSON 裡。換手機：匯出 → 貼到新手機匯入。沒有雲端。</div>');
+  P.push('<h2>備份</h2><div class="hint">持股、觀察標的、<b>模擬倉</b>與<b>歷史籤</b>（兩個市場）都在這份 JSON 裡。換手機：匯出 → 貼到新手機匯入。沒有雲端。</div>');
   P.push('<div class="setrow"><button class="btn" id="bexp" type="button">匯出到剪貼簿</button><button class="btn" id="bshow" type="button">顯示 JSON</button></div>');
   P.push('<div class="setrow"><textarea id="bjson" placeholder="貼上先前匯出的 JSON，再按匯入"></textarea></div><div class="setrow"><button class="btn" id="bimp" type="button">匯入（覆蓋）</button><button class="btn danger" id="bclr" type="button">清除這支手機的資料</button></div>');
   P.push('<h2>關於</h2><div class="hint">資料：'+esc(m.label)+' 訊號日 '+esc(m.date)+'，產生 '+esc(m.generated)+'。CCI 門檻 ±'+(m.meta||{}).cci_th+'、來回費率 '+(m.meta||{}).fee_rate+'%。<br>美股週二～六 11:00、台股週一～五 15:10（台北時間）更新。所有分析在伺服器端算好，手機不重算。</div>');
@@ -518,13 +741,15 @@ function renderSettings(){
   $$('[data-rm]',el).forEach(function(b){b.addEventListener('click',function(){S.hold[mk]=(S.hold[mk]||[]).filter(function(h){return h.id!==b.dataset.rm});save();renderSettings()})});
   $('#wadd').addEventListener('click',function(){var id=$('#wid').value.trim().toUpperCase();if(!id)return;if(mk==='tw')id=id.replace(/\.TW$/,'');W=S.wx[mk]=(S.wx[mk]||[]).filter(function(i){return i!==id});W.push(id);save();toast('已加入 '+id);renderSettings()});
   $$('[data-rmw]',el).forEach(function(b){b.addEventListener('click',function(){S.wx[mk]=(S.wx[mk]||[]).filter(function(i){return i!==b.dataset.rmw});save();renderSettings()})});
-  function dump(){return JSON.stringify({v:2,hold:S.hold,wx:S.wx,paper:S.paper})}
+  function dump(){return JSON.stringify({v:3,hold:S.hold,wx:S.wx,paper:S.paper,hist:S.hist})}
   $('#bexp').addEventListener('click',function(){var s=dump();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(function(){toast('已複製')},function(){$('#bjson').value=s;toast('無法寫入剪貼簿，已顯示在下方')})}else{$('#bjson').value=s;toast('已顯示在下方')}});
   $('#bshow').addEventListener('click',function(){$('#bjson').value=dump()});
+  $('#sGl').addEventListener('click',function(){openGlossAll()});
+  $('#sOnb').addEventListener('click',function(){showOnb()});
   $('#bzz').addEventListener('click',function(){S.buzz=!S.buzz;LS.set('sx.buzz',S.buzz);
     if(S.buzz)buzz([18,45,22]);toast('震動回饋已'+(S.buzz?'開啟':'關閉'),S.buzz?'ok':'warn');renderSettings()});
-  $('#bimp').addEventListener('click',function(){try{var j=JSON.parse($('#bjson').value);if(!j||typeof j!=='object')throw 0;S.hold=j.hold||{us:[],tw:[]};S.wx=j.wx||{us:[],tw:[]};S.paper=j.paper||{us:[],tw:[]};save();savePaper();toast('已匯入');renderSettings()}catch(e){toast('JSON 格式不對')}});
-  $('#bclr').addEventListener('click',function(){if(!confirm('清除這支手機上的持股與觀察標的？'))return;S.hold={us:[],tw:[]};S.wx={us:[],tw:[]};S.paper={us:[],tw:[]};save();savePaper();toast('已清除');renderSettings()});
+  $('#bimp').addEventListener('click',function(){try{var j=JSON.parse($('#bjson').value);if(!j||typeof j!=='object')throw 0;S.hold=j.hold||{us:[],tw:[]};S.wx=j.wx||{us:[],tw:[]};S.paper=j.paper||{us:[],tw:[]};S.hist=j.hist||{us:[],tw:[]};save();savePaper();LS.set('sx.hist',S.hist);toast('已匯入','ok');renderSettings()}catch(e){toast('JSON 格式不對')}});
+  $('#bclr').addEventListener('click',function(){if(!confirm('清除這支手機上的持股、觀察標的、模擬倉與歷史籤？'))return;S.hold={us:[],tw:[]};S.wx={us:[],tw:[]};S.paper={us:[],tw:[]};S.hist={us:[],tw:[]};save();savePaper();LS.set('sx.hist',S.hist);toast('已清除','bad');renderSettings()});
 }
 
 /* ═══════════ 詳情頁 ═══════════ */
@@ -532,28 +757,31 @@ var stack=[];
 function openSheet(ttl,body){$('#dTtl').innerHTML=ttl;$('#dBody').innerHTML=body;$('#sheet-d').classList.add('open');$('#dBody').scrollTop=0;stack.push(1);try{history.pushState({s:stack.length},'')}catch(e){}}
 function closeSheet(){$('#sheet-d').classList.remove('open')}
 $('#dClose').addEventListener('click',function(){if(stack.length){try{history.back();return}catch(e){}}closeSheet()});
-window.addEventListener('popstate',function(){stack.pop();closeSheet()});
+window.addEventListener('popstate',function(){
+  if(glOpen){hideGmd();return}            /* 名詞彈窗開著時，返回只關它 */
+  stack.pop();closeSheet()});
 function openDetail(id,ri){
   var m=M(),w=(S.WX[S.mkt]||{})[id],p=(S.PX[S.mkt]||{})[id],x=cciOf(id),ix=(m.index||[]).filter(function(z){return z.id===id})[0];
   var src=w||p||ix||x;if(!src){toast('沒有這一檔的資料');return}
   var B=[];
   if(w||ix){var c=scls(src.state,src.ranging);B.push('<div class="card '+c+'"><div class="whead"><span class="mstate '+c+'">'+esc(src.state||'')+'</span><span class="wsp"></span>'+(w&&w.hit!=null?'<span class="gr '+grcls(w.hit/(w.tot||6))+'">'+w.hit+'/'+(w.tot||6)+'</span>':'')+'</div><div class="mnote" style="border:none;padding:0;margin:0">'+esc(src.basis||src.note||src.ma_txt||'')+'</div></div>')}
-  if(w&&w.why&&w.why.length)B.push('<div class="card"><div class="bhead"><span class="h">六面向檢核</span><span class="sp"></span><span class="pill">'+w.hit+'／'+(w.tot||6)+' 項成立</span></div>'+chkList(w.why)+'</div>');
-  var st=src;B.push('<div class="card"><div class="kv">'+kv('收盤',fmt(st.c))+(st.chg!=null?kv('當日',sgn(st.chg)+'%'):'')+(st.ma20!=null?kv('月線',fmt(st.ma20)):'')+(st.dev!=null?kv('距月線',sgn(st.dev)+'%'):'')+(st.p!=null?kv('位階（52 週）',fmt(st.p)):'')+(st.v!=null?kv('量比',fmt(st.v)):'')+(st.ma_align?kv('均線排列',esc(st.ma_align)):'')+(st.ret20!=null?kv('近 20 日報酬',sgn(st.ret20)+'%'):'')+(st.rs20!=null?kv('相對大盤',sgn(st.rs20)+'%'):'')+(st.resist!=null?kv('壓力線',fmt(st.resist)):'')+(st.support!=null?kv('支撐線',fmt(st.support)):'')+(p&&p.s?kv('策略',esc(p.s)+' '+esc(p.side)+(p.age===0?'（今日）':'（'+p.age+' 日前）')):'')+'</div></div>');
+  if(w&&w.why&&w.why.length)B.push('<div class="card"><div class="bhead"><span class="h">'+gl('dim6','六面向檢核')+'</span><span class="sp"></span><span class="pill">'+w.hit+'／'+(w.tot||6)+' 項成立</span></div>'+chkList(w.why)+'</div>');
+  var st=src;B.push('<div class="card"><div class="kv">'+kv('收盤',fmt(st.c))+(st.chg!=null?kv('當日',sgn(st.chg)+'%'):'')+(st.ma20!=null?kv('月線',fmt(st.ma20)):'')+(st.dev!=null?kv(gl('dev','距月線'),sgn(st.dev)+'%'):'')+(st.p!=null?kv(gl('pos','位階')+'（52 週）',fmt(st.p)):'')+(st.v!=null?kv(gl('vr','量比'),fmt(st.v)):'')+(st.ma_align?kv(gl('align','均線排列'),esc(st.ma_align)):'')+(st.ret20!=null?kv('近 20 日報酬',sgn(st.ret20)+'%'):'')+(st.rs20!=null?kv(gl('rs','相對大盤'),sgn(st.rs20)+'%'):'')+(st.resist!=null?kv('壓力線',fmt(st.resist)):'')+(st.support!=null?kv('支撐線',fmt(st.support)):'')+(p&&p.s?kv('策略',esc(p.s)+' '+esc(p.side)+(p.age===0?'（今日）':'（'+p.age+' 日前）')):'')+'</div></div>');
   B.push(cciCard(id));
   if(p)B.push('<div id="hv"><div class="load">載入逐項判定…</div></div>');
-  if(w&&(w.kdt||w.mct))B.push('<div class="card"><div class="bhead"><span class="h">KD／MACD 轉向</span><span class="sp"></span>'+turnPill(w.kdt)+turnPill(w.mct)+'</div></div>');
+  if(w&&(w.kdt||w.mct))B.push('<div class="card"><div class="bhead"><span class="h">'+gl('kdmacd','KD／MACD 轉向')+'</span><span class="sp"></span>'+turnPill(w.kdt)+turnPill(w.mct)+'</div></div>');
   B.unshift('<div class="acts" id="dacts" style="margin:0 2px 10px">'+pBtn(id)+'</div>');
   openSheet('<span class="sym">'+showNm(id)+'</span>'+(src.chg!=null?' <span class="wchg '+cl(src.chg)+'">'+sgn(src.chg)+'%</span>':'')+badges(id),B.join(''));
   if(p){fetchHeavy(id).then(function(j){var el=$('#hv');if(!el)return;var h=j&&(j[String(ri!=null?ri:p._i)]||j[Object.keys(j)[0]]);if(!h){el.innerHTML='<div class="load">⚠️ 沒有對應的詳情資料</div>';return}
     var items=h.why||(h.chk?String(h.chk).split('|'):[]);var P=[];
-    if(items.length)P.push('<div class="card"><div class="bhead"><span class="h">六面向逐項判定</span></div>'+chkList(items)+'</div>');
+    if(items.length)P.push('<div class="card"><div class="bhead"><span class="h">'+gl('dim6','六面向逐項判定')+'</span></div>'+chkList(items)+'</div>');
     if(h.kdt||h.mct)P.push('<div class="card"><div class="bhead"><span class="h">KD／MACD</span></div><div class="fb" style="padding:0">'+esc(h.kdt||'')+(h.kdt&&h.mct?'<br>':'')+esc(h.mct||'')+'</div></div>');
     if(h.ent){var e=[];for(var k in h.ent)if(h.ent[k])e.push(esc(h.ent[k]));if(e.length)P.push('<div class="card"><div class="bhead"><span class="h">確認進場</span></div><div class="fb" style="padding:0">'+e.join('<br>')+'</div></div>')}
     if(h.wk&&h.wk.w)P.push('<div class="card"><div class="bhead"><span class="h">週線底部反轉</span></div><div class="fb" style="padding:0">'+esc(h.wk.w)+'</div></div>');
     el.innerHTML=P.join('')||''})}
 }
 document.addEventListener('click',function(e){
+  var g=e.target.closest('[data-gl]');if(g){openGloss(g.dataset.gl);return}   /* 要排在開詳情之前 */
   var f=e.target.closest('[data-follow]');if(f){follow(f.dataset.follow,f);return}
   var x=e.target.closest('[data-exit]');if(x){askExit(x.dataset.exit,x);return}
   var ob=e.target.closest('button[data-open]');if(ob){closeSheet();stack.length=0;openDetail(ob.dataset.open);return}
@@ -562,7 +790,7 @@ document.addEventListener('click',function(e){
 
 /* ═══════════ 總渲染 ═══════════ */
 function render(){
-  settle();
+  settle();recHist();
   var m=M();$('#hd-sub').textContent=m?('訊號日 '+m.date+' ・ 產生 '+m.generated):'載入中…';
   var nOpen=papers().filter(function(t){return pStat(t)!=='closed'}).length;
   var nb=$('nav button[data-tab="paper"]');
@@ -574,6 +802,7 @@ $$('main > section').forEach(function(s){s.hidden=s.id!=='pg-'+S.tab});
 $$('nav button').forEach(function(b){if(b.dataset.tab===S.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
 load(S.mkt).then(render).catch(function(e){$('#hd-sub').textContent='資料載入失敗：'+e.message;$('#pg-home').innerHTML='<div class="empty big">讀不到 data/'+S.mkt+'.json</div>'});
 load(S.mkt==='us'?'tw':'us').catch(function(){});   /* 另一個市場預先抓，切換不等待 */
+if(LS.get('sx.onb',0)<ONB_V)showOnb();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 </script>
 </body>
