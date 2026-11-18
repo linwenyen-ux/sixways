@@ -50,7 +50,8 @@
 .holditem{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 .holditem .hid{font-weight:800;min-width:64px}.holditem .hnm{color:var(--muted);flex:1;font-size:12.5px}
 .holditem .hcost{font-size:12px;color:var(--muted)}
-.holditem .x{appearance:none;border:none;background:none;color:var(--bad);font-weight:800;font-size:16px;cursor:pointer;padding:0 4px}
+.holditem .x{appearance:none;border:none;background:none;color:var(--bad);font-weight:800;font-size:18px;cursor:pointer;
+  width:32px;height:32px;line-height:1;flex:0 0 auto;border-radius:8px}  /* 刪除鈕原本只有 19px，誤觸代價是刪掉持股 */
 .hint{font-size:12px;color:var(--muted);line-height:1.6;margin:0 2px 10px}
 h2 .sp{flex:1}
 .brd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:0 2px 10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
@@ -125,6 +126,89 @@ background:var(--inset);font-size:12.5px;color:var(--muted);line-height:1.75}
 .onb .dots{display:flex;gap:6px;flex:1;align-items:center}
 .onb .dots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:block;transition:width .2s,background .2s}
 .onb .dots i.on{background:var(--accent);width:18px;border-radius:999px}
+
+/* ── 首頁：你的部位警示、今日數字列 ── */
+.alert{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:12px;
+background:var(--card);padding:10px 12px;margin:0 2px 10px;font-size:13px;line-height:1.7}
+.alert.bad{border-left-color:var(--bad)}
+.alert.warn{border-left-color:var(--warn)}
+.alert .t{font-weight:800;display:block;margin-bottom:1px}
+.alert .nm{color:var(--muted)}
+.alert .go{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.cnts{display:flex;gap:6px;margin:0 2px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.cnts button{flex:0 0 auto;appearance:none;border:1px solid var(--line);background:var(--card);
+color:var(--muted);font:inherit;font-size:11.5px;line-height:1.3;padding:7px 11px;border-radius:12px;
+cursor:pointer;text-align:center;min-height:44px;display:flex;flex-direction:column;justify-content:center;gap:1px}
+.cnts button b{display:block;font-size:16px;font-weight:800;color:var(--fg);font-variant-numeric:tabular-nums}
+.cnts button.g b{color:var(--good)}.cnts button.d b{color:var(--bad)}.cnts button.p b{color:var(--accent)}
+
+/* ── 求籤：問籤、籤筒、籤卡、三籤比較 ── */
+.ask{display:grid;gap:7px;margin:0 2px 12px}
+.ask button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--card);
+border-radius:12px;padding:11px 13px;font:inherit;color:inherit;cursor:pointer;
+display:flex;align-items:center;gap:10px;min-height:48px}
+.ask button .q{flex:1;font-weight:700;font-size:13.5px}
+.ask button .e{font-size:17px;flex:0 0 auto}
+.ask button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.ansr{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;
+background:var(--card);padding:11px 13px;margin:0 2px 12px;font-size:13px;line-height:1.8}
+.ansr .t{font-weight:800;display:block;margin-bottom:2px}
+.ansr .src{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);
+font-size:11.5px;color:var(--muted);line-height:1.6}
+.shrine{display:flex;align-items:center;gap:14px;margin:0 2px 14px}
+.tube{flex:0 0 auto;width:50px;height:64px;border-radius:7px 7px 10px 10px;
+background:linear-gradient(180deg,var(--chip),var(--inset));border:1px solid var(--line);
+display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;
+position:relative;transform-origin:50% 100%}
+.tube i{font-style:normal;font-weight:800;font-size:18px;color:var(--muted);letter-spacing:.1em}
+.tube::before{content:"";position:absolute;top:-10px;left:11px;right:11px;height:13px;
+border-radius:3px 3px 0 0;background:var(--line)}
+.tube.shaking{animation:shake .78s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:rotate(-7deg)}20%,80%{transform:rotate(8deg)}
+30%,50%,70%{transform:rotate(-12deg)}40%,60%{transform:rotate(12deg)}100%{transform:rotate(0)}}
+.sacts{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.omen{border-radius:16px;padding:16px;margin:0 2px 12px;border:1px solid var(--line);
+background:var(--card);box-shadow:var(--sh);position:relative;overflow:hidden}
+.omen::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--warn)}
+.omen.up::before{background:var(--good)}.omen.down::before{background:var(--bad)}
+.omen.mid::before{background:var(--warn)}.omen.odd::before{background:var(--accent2)}
+.omen .oh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.omen .lv{font-size:32px;font-weight:800;line-height:1;letter-spacing:.06em}
+.omen.up .lv{color:var(--good)}.omen.down .lv{color:var(--bad)}
+.omen.mid .lv{color:var(--warn)}.omen.odd .lv{color:var(--accent2)}
+.omen .sy{font-size:17px;font-weight:800;flex:1;min-width:0}
+.omen .tag{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.6}
+.omen .poem{font-size:15px;line-height:1.8;margin:9px 0 11px}
+.omen .yj{display:grid;gap:7px;font-size:12.5px;line-height:1.75}
+.omen .yj>div{display:flex;gap:9px;align-items:flex-start}
+.omen .yj b{flex:0 0 auto;width:21px;height:21px;border-radius:6px;text-align:center;
+line-height:21px;font-size:12px;margin-top:1px}
+.omen .yj .y b{background:rgba(46,158,91,.16);color:var(--good)}
+.omen .yj .j b{background:rgba(217,75,75,.16);color:var(--bad)}
+.slip{animation:slip .36s cubic-bezier(.32,.72,0,1)}
+@keyframes slip{from{transform:translateY(-16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 2px 12px}
+.three button{appearance:none;border:1px solid var(--line);background:var(--card);border-radius:12px;
+padding:10px 5px;cursor:pointer;color:inherit;font:inherit;min-height:94px;
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.three button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.three .l{font-size:21px;font-weight:800;line-height:1}
+.three.x .up .l,.three .up .l{color:var(--good)}.three .down .l{color:var(--bad)}
+.three .mid .l{color:var(--warn)}.three .odd .l{color:var(--accent2)}
+.three .s{font-size:12.5px;font-weight:700;max-width:100%;overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.three .g{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.4}
+@media (prefers-reduced-motion:reduce){.tube.shaking,.slip{animation:none}}
+
+/* ── 籤準不準 ── */
+.acc{width:100%;border-collapse:collapse;font-size:12.5px;margin:0 2px 8px;
+border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.acc th,.acc td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line);
+font-variant-numeric:tabular-nums;white-space:nowrap}
+.acc th{color:var(--muted);font-weight:600;font-size:11.5px}
+.acc th:first-child,.acc td:first-child{text-align:left}
+.acc tr:last-child td{border-bottom:none}
+.acc .thin{color:var(--muted)}
 
 /* ── 歷史籤 ── */
 .hrow{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);
@@ -231,6 +315,9 @@ var S={
   hist: LS.get('sx.hist',{us:[],tw:[]}),        /* 歷史籤：每個訊號日一筆，同樣只存這支手機 */
   glseen:LS.get('sx.glseen',false),             /* 點過任一個名詞解釋了沒 */
   histAll:false, histOpen:null,
+  anim: LS.get('sx.anim',true),                 /* 搖籤動畫，設定頁可關 */
+  shake:LS.get('sx.shake',false),               /* 搖手機抽籤，預設關 */
+  ask:null, three:null, poolN:40,
   flip:false, drawn:null
 };
 function M(){return S.D[S.mkt]||null}
@@ -341,9 +428,11 @@ dayweight:['以訊號日計','把同一天出現的所有訊號合成一筆再�
 bm:['同期大盤','同一段持有期間，{bm} 的報酬。拿來對照你的模擬倉有沒有贏過單純抱著大盤。'],
 pending:['待成交','已經跟單，但還沒到下一個交易日開盤，所以還沒有成交價。下次資料更新時會自動補上。'],
 vix:['VIX','市場波動率指數，俗稱恐慌指數。位階是它在過去 250／60 天區間裡的相對位置。'],
+acc:['籤準不準','把你手機裡記下的每一支籤，對照那天之後 5 個與 20 個交易日的大盤漲跌。大盤收盤序列由伺服器提供（{bm}，160 個交易日），所以就算你有幾天沒開 App 也算得出來。<b>但籤的等級無法回填</b>——每天的判讀只在當天那份資料裡，所以這份回顧只能從安裝之後開始長。樣本少於 10 天不顯示平均值：相鄰日期的未來報酬本來就重疊，少數幾天算出來的平均沒有意義。'],
+streak:['連續紀錄','連續有記錄的<b>交易日</b>數，不是日曆天（不然每個週末都會斷）。這只是紀錄，不是目標——回測自己的結論是正期望值集中在少數幾天，每天盯盤找事做反而和它相反。'],
 mktb:['市場廣度','全市場多方標的與空方標的的比例，用來看漲跌是普遍發生，還是集中在少數幾檔。']
 };
-var GLORDER=['fortune','regime','vote','gate','breadth','pct','hot','act','sixways','dim6','cci','cci_a','cci_b','sma','cross','pine','ent','slp','gap','dev','pos','vr','rs','align','kdmacd','vix','mktb','fill','fee','pending','bm','pf','dayweight'];
+var GLORDER=['fortune','regime','vote','gate','breadth','pct','hot','act','acc','streak','sixways','dim6','cci','cci_a','cci_b','sma','cross','pine','ent','slp','gap','dev','pos','vr','rs','align','kdmacd','vix','mktb','fill','fee','pending','bm','pf','dayweight'];
 function glVars(){
   var m=M()||{},mt=m.meta||{},cm=(m.cci||{}).meta||{},b=m.breadth||{},st=(m.cci||{}).stats||{};
   return {mk:m.label||'',th:mt.cci_th,cut:b.cut,per:b.per_year,hotd:b.hot_days,hotavg:sgn(b.hot_avg),
@@ -439,11 +528,51 @@ function recHist(){
   if(h.length>120)S.hist[S.mkt]=h.slice(-120);
   LS.set('sx.hist',S.hist);
 }
+/* 大盤收盤序列：[[日期,收盤],…] 升冪，由伺服器提供（見 sixways_app.build_bm_hist） */
+function bmSeries(){var m=M();return (m&&m.bm_hist)||[]}
+function bmIdx(){var s=bmSeries(),o={};for(var i=0;i<s.length;i++)o[s[i][0]]=i;return o}
+/* 連續＝序列上相鄰的交易日，週末與休市不算斷 */
+function histStreak(){
+  var h=hists(),ix=bmIdx(),best=0,cur=0,last=null;
+  h.forEach(function(x){var i=ix[x.date];
+    if(i==null){cur=0;last=null;return}
+    cur=(last!=null&&i===last+1)?cur+1:1;last=i;if(cur>best)best=cur});
+  return {best:best,cur:(h.length&&h[h.length-1].date===(M()||{}).date)?cur:0};
+}
+var ACC_MIN=10;                      /* 樣本少於這個數就不給平均值 */
+function histAccuracy(){
+  var h=hists(),s=bmSeries(),ix=bmIdx();if(!s.length||!h.length)return null;
+  var g={},any=false;
+  h.forEach(function(x){var i=ix[x.date];if(i==null)return;
+    var o=g[x.lv]||(g[x.lv]={r5:[],r20:[]});
+    if(i+5<s.length){o.r5.push((s[i+5][1]/s[i][1]-1)*100);any=true}
+    if(i+20<s.length)o.r20.push((s[i+20][1]/s[i][1]-1)*100)});
+  return any?g:null;
+}
+function accBlock(){
+  var g=histAccuracy();
+  if(!g)return '<div class="hint">'+gl('acc','籤準不準')+'：還要再等 5 個交易日才算得出第一筆（要有「那天之後 5 日」的大盤收盤才能比）。</div>';
+  function avg(a){return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null}
+  function cell(a){if(a.length<ACC_MIN)return '<td class="thin">—</td>';var v=avg(a);return '<td class="'+cl(v)+'">'+sgn(v)+'%</td>'}
+  var lvs=['上籤','中籤','下籤','奇籤'].filter(function(k){return g[k]&&g[k].r5.length});
+  if(!lvs.length)return '';
+  var enough=lvs.some(function(k){return g[k].r5.length>=ACC_MIN});
+  return '<table class="acc"><tr><th>'+gl('acc','籤')+'</th><th>樣本</th><th>5 日後大盤</th><th>20 日後大盤</th></tr>'
+    +lvs.map(function(k){return '<tr><td>'+k+'</td><td class="thin">'+g[k].r5.length+' 天</td>'+cell(g[k].r5)+cell(g[k].r20)+'</tr>'}).join('')
+    +'</table><div class="hint">'+(enough
+      ?'樣本仍然很小，而且相鄰日期的未來報酬彼此重疊，別把這幾個數字當成統計結論。'
+      :'樣本不足 '+ACC_MIN+' 天的不顯示平均值。這份回顧只能從安裝之後開始累積，無法回填。')+'</div>';
+}
+
 function histBlock(){
   var m=M(),h=hists().slice().filter(function(x){return x.date!==(m||{}).date}).reverse();
   if(!h.length)return '<h2>歷史籤</h2><div class="hint">歷史籤從今天開始累積，只存在這支手機。明天再打開，就會在這裡看到今天這支籤。<br>（過去的籤無法回填——每天的判讀只在當天的資料裡，沒有留存。）</div>';
   var cnt={};h.forEach(function(x){cnt[x.lv]=(cnt[x.lv]||0)+1});
-  var sum='<div class="hsum"><span>已記錄 <b>'+h.length+'</b> 天</span>'+['上籤','中籤','下籤','奇籤'].map(function(k){return cnt[k]?'<span>'+k+' <b>'+cnt[k]+'</b></span>':''}).join('')+'<span>最早 '+h[h.length-1].date+'</span></div>';
+  var sk=histStreak();
+  var sum='<div class="hsum"><span>已記錄 <b>'+hists().length+'</b> 天</span>'
+    +['上籤','中籤','下籤','奇籤'].map(function(k){return cnt[k]?'<span>'+k+' <b>'+cnt[k]+'</b></span>':''}).join('')
+    +(sk.best>1?'<span>'+gl('streak','最長連續')+' <b>'+sk.best+'</b> 個交易日'+(sk.cur>1?'（目前 '+sk.cur+'）':'')+'</span>':'')
+    +'<span>最早 '+h[h.length-1].date+'</span></div>';
   var show=S.histAll?h:h.slice(0,7);
   var rows=show.map(function(x){
     var o=S.histOpen===x.date;
@@ -452,7 +581,7 @@ function histBlock(){
       +'<span class="hx">'+esc(x.st||'')+(x.bn!=null?' ・廣度 '+x.bn:'')+'</span></div>'
       +(o?'<div class="hdet">'+esc(x.poem)+'<br>'+esc(x.why)+'<br><b>當日可動作 '+x.act+' 檔</b></div>':'');
   }).join('');
-  return '<h2>歷史籤</h2>'+sum+rows
+  return '<h2>歷史籤</h2>'+sum+accBlock()+rows
     +(h.length>7?'<div class="setrow"><button class="btn" id="histMore" type="button">'+(S.histAll?'收起':'看全部 '+h.length+' 天')+'</button></div>':'');
 }
 
@@ -464,13 +593,46 @@ function fortune(m){
   if(/空方格局/.test(st))return {lv:'下籤',nm:'逆風慎行',cls:'down',poem:'逆風不是不能走，是每一步都要算。',why:'大盤'+st+'，多方訊號逆勢。'};
   return {lv:'中籤',nm:'宜守觀望',cls:'mid',poem:'雲未開，先把船繫好。',why:'大盤'+(st||'方向不明')+'，不是明確的順勢環境。'};
 }
+/* 你的部位：持股與模擬倉今天有沒有要處理的事。兩者都只存在這支手機，伺服器不知道。 */
+function yourBlock(){
+  var m=M();if(!m)return '';
+  var H=holdIds(),ps=papers();
+  if(!H.length&&!ps.length)return '';
+  var hd=H.filter(function(id){return (cciOf(id)||{}).k==='d'});
+  var die=ps.filter(function(t){return pStat(t)==='open'&&(cciOf(t.id)||{}).k==='d'});
+  var pend=ps.filter(function(t){var k=pStat(t);return k==='pending'||k==='closing'});
+  var nOpen=ps.filter(function(t){return pStat(t)!=='closed'}).length,P=[];
+  function nms(a,f){return a.map(function(x){return esc(nameOf(f?f(x):x))}).join('、')}
+  if(hd.length)P.push('<div class="alert bad"><span class="t">持股出現 '+gl('cross','CCI 死叉')+' '+hd.length+' 檔</span>'
+    +'<span class="nm">'+nms(hd)+'</span><div class="go"><button class="btn" data-goto="cci-hold" type="button">到 CCI 看這幾檔</button></div></div>');
+  if(die.length)P.push('<div class="alert bad"><span class="t">模擬倉有 '+die.length+' 筆出現死叉</span>'
+    +'<span class="nm">'+nms(die,function(t){return t.id})+'</span><div class="go"><button class="btn" data-goto="paper" type="button">到模擬倉處理</button></div></div>');
+  if(pend.length)P.push('<div class="alert warn"><span class="t">模擬倉 '+pend.length+' 筆等下一個交易日開盤成交</span>'
+    +'<span class="nm">'+nms(pend,function(t){return t.id})+'</span></div>');
+  if(!P.length)P.push('<div class="alert"><span class="t">你的部位今天沒有待處理的事</span>'
+    +'<span class="nm">持股 '+H.length+' 檔、模擬倉持倉 '+nOpen+' 筆，都沒有出場訊號。</span></div>');
+  return P.join('');
+}
+/* 今日最具體的四個數字，點了直接跳到 CCI 分頁對應的篩選 */
+function cntsBlock(){
+  var m=M(),c=(m.cci||{}).counts||{},b=m.breadth||{};
+  function one(f,lab,v,cls){return '<button type="button" data-cci="'+f+'" class="'+(cls||'')+'"><b>'+v+'</b>'+lab+'</button>'}
+  return '<div class="cnts">'
+    +one('g','今日金叉',c.g||0,'g')
+    +one('g','其中三條件',b.n==null?0:b.n,'p')
+    +one('d','今日死叉',c.d||0,'d')
+    +one('act','可動作',c.act||0)
+    +one('near','明日預警',c.near||0)+'</div>';
+}
 function renderHome(){
   var m=M();if(!m){$('#pg-home').innerHTML='<div class="empty big">載入中…</div>';return}
   var f=fortune(m),r=m.regime||{},b=m.breadth||{},c=(m.cci||{}).counts||{};
   var P=['<div class="fortune '+f.cls+'"><div class="lv">'+esc(m.label)+' ・ 訊號日 '+esc(m.date)+' ・ '+f.lv+'</div><div class="nm">'+f.nm+'</div><div class="poem">'+f.poem+'</div>'
     +'<div class="meta">'+gl('regime','大盤')+' <b>'+esc(r.state||'—')+'</b>（'+gl('vote','票數')+' '+sgn(r.score,1)+'）｜多方訊號 '+gl('gate',esc((r.gate||{})['多']||'—'))+'・空方訊號 '+gl('gate',esc((r.gate||{})['空']||'—'))+'<br>'+gl('breadth','CCI 廣度')+' <b>'+(b.n==null?'—':b.n+' 檔')+'</b>（'+esc(b.lvl||'—')+'，第 '+(b.pct==null?'—':b.pct)+' '+gl('pct','百分位')+'）｜今日'+gl('act','可動作')+' <b>'+(c.act||0)+'</b> 檔</div>'
-    +'<div class="acts"><button class="btn" id="btnFlip" type="button">'+(S.flip?'收起依據':'為什麼？')+'</button><button class="btn pri" id="btnDraw" type="button">抽一籤</button><button class="btn" id="btnBoard" type="button">看戰情板</button></div></div>'];
+    +'<div class="acts"><button class="btn" id="btnFlip" type="button">'+(S.flip?'收起依據':'為什麼？')+'</button><button class="btn pri" id="btnDraw" type="button">求籤</button><button class="btn" id="btnBoard" type="button">看戰情板</button></div></div>'];
   if(S.flip){P.push('<div class="flip"><div class="card"><div class="bhead"><span class="h">這支籤的依據（'+gl('fortune','等級怎麼來')+'）</span></div><div class="mnote" style="border:none;padding:4px 0 0;margin:0">'+esc(f.why)+'</div></div>'+mktTop(m,true)+'</div>')}
+  P.push(yourBlock());
+  P.push(cntsBlock());
   if(!S.glseen)P.push('<div class="glhint">畫面上有<span class="gl">虛線底線</span>的名詞都可以點開解釋。</div>');
   P.push('<div class="disc">籤的等級完全由既有規則決定，不加任何新邏輯。規則判定結果，不構成投資建議。</div>');
   P.push(histBlock());
@@ -478,6 +640,11 @@ function renderHome(){
   $('#btnFlip').addEventListener('click',function(){S.flip=!S.flip;renderHome()});
   $('#btnDraw').addEventListener('click',function(){go('draw')});
   $('#btnBoard').addEventListener('click',function(){goSub('mkt');go('board')});
+  $$('[data-cci]',el).forEach(function(b){b.addEventListener('click',function(){
+    S.cf.v=b.dataset.cci;S.cf.scope='all';S.cf.q='';goSub('cci');go('board')})});
+  $$('[data-goto]',el).forEach(function(b){b.addEventListener('click',function(){
+    if(b.dataset.goto==='cci-hold'){S.cf.v='all';S.cf.scope='hold';S.cf.q='';goSub('cci');go('board')}
+    else go(b.dataset.goto)})});
   $$('[data-hist]',el).forEach(function(b){b.addEventListener('click',function(){
     S.histOpen=S.histOpen===b.dataset.hist?null:b.dataset.hist;renderHome()})});
   var hm=$('#histMore');if(hm)hm.addEventListener('click',function(){S.histAll=!S.histAll;renderHome()});
@@ -543,15 +710,20 @@ function poolRow(x){
   var st=x.wk_only?'<span class="pill wk">週線打底</span>':(x.conf_only?'<span class="pill conf">確認進場</span>':'<span class="pill '+(x.side==='多'?'long':'short')+'">'+esc(x.s)+' '+esc(x.side)+'</span>');
   return '<div class="prow'+(x.age>0?' rold':'')+'" data-open="'+esc(x.id)+'" data-ri="'+x._i+'" role="button" tabindex="0"><span class="gr '+grcls(x.ratio)+'">'+x.hit+'/'+x.tot+'</span><span class="c2"><span class="t1"><span class="sym">'+showNm(x.id)+'</span>'+badges(x.id)+'</span><span class="t2">'+st+(x.trend?'<span class="trend '+(x.trend==='順勢'?'':'against')+'">'+esc(x.trend)+'</span>':'')+age+turnPill(x.kdt)+turnPill(x.mct)+dim6(x.dm)+'</span></span><span class="c3"><span class="px">'+fmt(x.c)+'</span><br><span class="dv '+cl(x.dev)+'">'+sgn(x.dev)+'%</span></span></div>';
 }
+var POOL_STEP=40;      /* 201 列一次全渲染要捲近兩萬 px，手機上不合理 */
 function renderPool(){
   var rows=poolRows().filter(poolMatch);
   rows.sort(function(a,b){var d=((a.trend==='順勢')?0:1)-((b.trend==='順勢')?0:1);if(d)return d;d=(a.age||0)-(b.age||0);if(d)return d;return (b.ratio||0)-(a.ratio||0)});
   var f=S.pf,P=[];
+  var nh=poolRows().filter(function(x){return isHold(x.id)}).length;
+  if(!nh&&f.scope==='hold')f.scope='all';          /* 持股被清掉後不要卡在空清單 */
   function chip(g,v,l){return '<button class="chip" data-g="'+g+'" data-v="'+v+'" aria-pressed="'+(f[g]===v)+'">'+l+'</button>'}
   P.push('<div class="fbar qbar"><div class="seg">'+chip('side','all','多空皆列')+chip('side','多','多方')+chip('side','空','空方')+'</div><span class="cnt">'+rows.length+' / '+poolRows().length+' 筆</span></div>');
-  P.push('<div class="fbar qbar"><div class="seg">'+chip('age','all','近 '+(M().window||5)+' 日')+chip('age','today','只看今日')+chip('scope','all','全池')+chip('scope','hold','只看持股 '+poolRows().filter(function(x){return isHold(x.id)}).length)+chip('scope','watch','只看觀察')+'</div></div>');
+  P.push('<div class="fbar qbar"><div class="seg">'+chip('age','all','近 '+(M().window||5)+' 日')+chip('age','today','只看今日')+chip('scope','all','全池')+(nh?chip('scope','hold','只看持股 '+nh):'')+chip('scope','watch','只看觀察')+'</div></div>');
   P.push('<div class="setrow" style="margin:0 2px 8px"><input id="pq" type="search" placeholder="搜尋代號或名稱…" value="'+esc(f.q)+'"></div>');
-  P.push('<div class="plist">'+(rows.length?rows.map(poolRow).join(''):'<div class="empty">沒有符合條件的標的</div>')+'</div>');
+  var show=rows.slice(0,S.poolN);
+  P.push('<div class="plist">'+(rows.length?show.map(poolRow).join(''):'<div class="empty">沒有符合條件的標的</div>')+'</div>');
+  if(rows.length>show.length)P.push('<div class="setrow" style="margin:0 2px 10px"><button class="btn" id="poolMore" type="button">再載入 '+Math.min(POOL_STEP,rows.length-show.length)+' 列（還有 '+(rows.length-show.length)+' 列）</button></div>');
   P.push('<div class="foot">全池 '+(M().meta||{}).universe+' 檔｜表內 '+poolRows().length+' 列（六大策略訊號＋確認進場補列＋週線打底補列）</div>');
   return P.join('');
 }
@@ -576,10 +748,11 @@ function renderCci(){
   rows.sort(function(a,b){var d=KO[a.k]-KO[b.k];if(d)return d;d=(a.pine?0:1)-(b.pine?0:1);if(d)return d;return Math.abs(a.gap)-Math.abs(b.gap)});
   function chip(g,v,l){return '<button class="chip" data-g="'+g+'" data-v="'+v+'" aria-pressed="'+(f[g]===v)+'">'+l+'</button>'}
   var nh=all.filter(function(x){return isHold(x.id)}).length,xh=all.filter(function(x){return x.k==='d'&&isHold(x.id)}).length;
+  if(!nh&&f.scope==='hold')f.scope='all';
   var P=[];
   var b=m.breadth||{};if(b.n!=null)P.push('<div class="brd'+(b.hot?' hot':'')+'">'+(b.hot?'<span class="pill short">全市場超賣</span>':'')+'今日通過三條件的金叉 <b>'+b.n+' 檔</b>・'+esc(b.lvl)+'・第 '+b.pct+' 百分位・警示門檻 ≥'+b.cut+' 檔</div>');
   P.push('<div class="fbar qbar"><div class="seg">'+chip('v','act','可動作')+chip('v','all','全部')+chip('v','g','金叉 '+(C.g||0))+chip('v','d','死叉 '+(C.d||0))+chip('v','near','明日預警 '+(C.near||0))+'</div><span class="cnt">'+rows.length+' / '+all.length+' 筆</span></div>');
-  P.push('<div class="fbar qbar"><div class="seg">'+chip('scope','all','全池')+chip('scope','hold','只看持股 '+nh+(xh?'・出場提醒 '+xh:''))+chip('scope','watch','只看觀察')+'</div></div>');
+  P.push('<div class="fbar qbar"><div class="seg">'+chip('scope','all','全池')+(nh?chip('scope','hold','只看持股 '+nh+(xh?'・出場提醒 '+xh:'')):'')+chip('scope','watch','只看觀察')+'</div></div>');
   P.push('<div class="setrow" style="margin:0 2px 8px"><input id="cq" type="search" placeholder="搜尋代號或名稱…" value="'+esc(f.q)+'"></div>');
   P.push('<div class="plist">'+(rows.length?rows.map(cciRow).join(''):'<div class="empty">沒有符合條件的標的</div>')+'</div>');
   var st=cc.stats||{},dy=st.day||{},mt=cc.meta||{};
@@ -592,23 +765,230 @@ function renderBoard(){
   $$('#subtabs .chip').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.sub===S.sub))});
   var h={mkt:renderMkt,watch:renderWatch,pool:renderPool,cci:renderCci}[S.sub]||renderMkt;
   var body=$('#board-body');body.innerHTML=h();
-  $$('.chip[data-g]',body).forEach(function(b){b.addEventListener('click',function(){var f=S.sub==='cci'?S.cf:S.pf;f[b.dataset.g]=b.dataset.v;renderBoard()})});
-  var q=$('#pq',body)||$('#cq',body);if(q){q.addEventListener('input',function(){(S.sub==='cci'?S.cf:S.pf).q=q.value.trim().toLowerCase();var pos=q.selectionStart;renderBoard();var q2=$('#pq')||$('#cq');if(q2){q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}}})}
+  $$('.chip[data-g]',body).forEach(function(b){b.addEventListener('click',function(){var f=S.sub==='cci'?S.cf:S.pf;f[b.dataset.g]=b.dataset.v;S.poolN=POOL_STEP;renderBoard()})});
+  var more=$('#poolMore',body);
+  if(more)more.addEventListener('click',function(){var y=window.scrollY;S.poolN+=POOL_STEP;renderBoard();window.scrollTo(0,y)});
+  var q=$('#pq',body)||$('#cq',body);if(q){q.addEventListener('input',function(){(S.sub==='cci'?S.cf:S.pf).q=q.value.trim().toLowerCase();S.poolN=POOL_STEP;var pos=q.selectionStart;renderBoard();var q2=$('#pq')||$('#cq');if(q2){q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}}})}
 }
 
-/* ═══════════ 抽籤 ═══════════ */
+/* ═══════════ 求籤：可抽的池子 ═══════════ */
 function drawPool(){var m=M(),mt=(m.cci||{}).meta||{};return ((m.cci||{}).rows||[]).filter(function(x){return (x.k==='g'&&x.pine)||Math.abs(x.gap||0)<=(mt.act||1)})}
+/* ═══════════ 求籤 ═══════════
+   籤面（吉／平／凶／異）講的是**這一檔的訊號狀態**，和首頁「今日籤」（上／中／下／奇籤）
+   講的大盤環境是兩個尺度，所以刻意用完全不重疊的四個字，避免混淆。
+   判定全部沿用既有欄位，不加新邏輯。 */
+function reduceMotion(){try{return window.matchMedia('(prefers-reduced-motion:reduce)').matches}catch(e){return false}}
+function omen(id){
+  var x=cciOf(id),m=M();if(!x||!m)return null;
+  var b=m.breadth||{},mt=(m.cci||{}).meta||{},g=Math.abs(x.gap||0),o;
+  if(x.k==='g'&&x.pine)      o={lv:'吉',cls:'up',  tag:'完整三條件的金叉今日成立'};
+  else if(x.k==='g')         o={lv:'平',cls:'mid', tag:'今日金叉，但未通過完整三條件'};
+  else if(x.k==='d')         o={lv:'凶',cls:'down',tag:'今日死叉'};
+  else {var side=(x.want==='死'||x.slk==='fwd')?'死':'金';
+        o={lv:'平',cls:'mid',side:side,
+           tag:'尚未穿越，距'+side+'叉門檻 '+sgn(x.gap)+'%'+(g<=(mt.act||1)?'（可動作範圍內）':'')};}
+  if(b.hot){o.lv='異';o.cls='odd';o.tag='全市場超賣日 ・ '+o.tag}
+  o.x=x;return o;
+}
+var POEMS={
+ '吉':['門已經開了，走不走是你的事。','三個條件都點頭，剩下的交給明天。',
+      '訊號到齊了。到齊不等於會贏。','燈亮了——燈亮不保證路是平的。','該有的都有，缺的只有結果。'],
+ '平':['還差一步。一步也是距離。','水位快到了，還沒漫過堤。','等它自己說話，別替它開口。',
+      '名字在名單上，號碼還沒叫到。','快了。快了不是到了。'],
+ '凶':['退的訊號先到，別跟它爭。','這一回合它說收，就收。','不是你看錯，是風向換了。',
+      '止損不是認輸，是認規則。'],
+ '異':['滿城皆跌，此時反是。','人少的路口，歷史上有東西。','這種日子一年沒幾天。',
+      '市場整批趴下的時候，名單才長這樣。']
+};
+function hashStr(t){var h=0;for(var i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return Math.abs(h)}
+/* 同一天同一檔固定同一首，重畫不會換；不同檔會不一樣 */
+function poemOf(lv,id){var a=POEMS[lv]||POEMS['平'];return a[hashStr((M()||{}).date+'|'+id)%a.length]}
+/* 宜／忌直接從規則翻譯，不是建議，是把規則講成人話 */
+function yiji(o,id){
+  var x=o.x,m=M(),b=m.breadth||{},f=feeRate();
+  if(o.lv==='凶')return [['宜','死叉是出場訊號。照回測規則，下一個交易日開盤出場。'],
+    ['忌','在死叉之後替續抱找理由——那不在規則裡，回測也不是那樣算的。']];
+  if(o.lv==='異')return [['宜','這種日子'+(m.label)+'歷史上一年約 '+b.per_year+' 次，那些日子整批訊號的平均是 '+sgn(b.hot_avg)+'%。'],
+    ['忌','把單一檔的結果當成那個平均——平均來自一整批，不是某一檔。']];
+  if(o.lv==='吉')return [['宜','訊號已成立。照回測規則，下一個交易日開盤進場，已扣來回成本 '+f+'%。'],
+    ['忌','拿今天的收盤價當成交價去算報酬——回測不是這樣算的，模擬倉也不是。']];
+  if(o.side==='死')                      /* 這一檔是在接近死叉，不是接近買點，宜忌完全相反 */
+    return [['宜',x.sl!=null?'這一檔活的是<b>止損側</b>：明日<b>收盤</b>跌破 '+fmt(x.sl)+' 就觸發死叉。手上有的話，照規則是後日開盤出場。'
+                            :'這一檔活的是止損側，等它真的跌破門檻就是死叉。'],
+            ['忌','把「快跌破」看成「跌夠了可以接」——規則裡沒有這一條，它要的是金叉。']];
+  return [['宜',x.ent!=null?'等明日<b>收盤</b>站上 '+fmt(x.ent)+' 才算數。這是收盤價門檻，不是盤中掛單價。'
+                          :'等它真的穿越金叉門檻再說。這是收盤價門檻，不是盤中掛單價。'],
+          ['忌','把今天的門檻當成明天的——門檻每天重算，會移動。']];
+}
+function omenCard(id,slip){
+  var o=omen(id);if(!o)return '';
+  var yj=yiji(o,id);
+  return '<div class="omen '+o.cls+(slip?' slip':'')+'"><div class="oh"><span class="lv">'+o.lv+'</span>'
+    +'<span class="sy">'+showNm(id)+badges(id)+'</span></div>'
+    +'<div class="tag">'+o.tag+'</div>'
+    +'<div class="poem">'+esc(poemOf(o.lv,id))+'</div>'
+    +'<div class="yj">'+yj.map(function(a){return '<div class="'+(a[0]==='宜'?'y':'j')+'"><b>'+a[0]+'</b><span>'+a[1]+'</span></div>'}).join('')+'</div></div>';
+}
+/* 抽到的檔不一定在策略池裡（沒有位階／量比／六面向），所以一律補上 CCI 這一組一定有的數字 */
+function drawStock(id){
+  var x=cciOf(id),p=(S.PX[S.mkt]||{})[id],w=(S.WX[S.mkt]||{})[id];
+  if(w)return watchCard(w);
+  return '<div class="card" data-open="'+esc(id)+'" role="button" tabindex="0">'
+    +'<div class="whead"><span class="wsym">'+showNm(id)+badges(id)+'</span></div>'
+    +'<div class="wprice">'+fmt(x.c)+(p&&p.chg!=null?' <span class="wchg '+cl(p.chg)+'">'+sgn(p.chg)+'%</span>':'')
+    +(p?'<span class="wsp"></span><span data-gl="dim6">'+dim6(p.dm)+'</span>':'')+'</div>'
+    +'<div class="stats">'+kvc(gl('dev','距月線'),sgn(x.dev)+'%',cl(x.dev))
+    +(p&&p.p!=null?kv(gl('pos','位階'),fmt(p.p)):'')+(p&&p.v!=null?kv(gl('vr','量比'),fmt(p.v)):'')
+    +kvc(gl('gap','距門檻'),sgn(x.gap)+'%',cl(x.gap))+kv(gl('cci_a','CCI_A'),fmt(x.a,1))
+    +kv(gl('sma','均線 SMA'),fmt(x.sma,1))+'</div>'
+    +(p&&p.s?'<div class="tags"><span class="pill '+(p.side==='多'?'long':'short')+'">'+esc(p.s)+' '+esc(p.side)+'</span></div>':'')
+    +'</div>';
+}
+/* 籤筒組成：抽之前先說清楚裡面是什麼。今天 97 檔可動作裡多半是死叉側，
+   不講的話使用者會以為「抽到凶是手氣不好」，其實是今天的市場就長這樣。 */
+function tubeMix(){
+  var p=drawPool(),m={g3:0,gn:0,d:0,nd:0,ng:0};
+  p.forEach(function(x){
+    if(x.k==='g'&&x.pine)m.g3++;else if(x.k==='g')m.gn++;
+    else if(x.k==='d')m.d++;else if(x.want==='死'||x.slk==='fwd')m.nd++;else m.ng++});
+  m.n=p.length;return m;
+}
+function pick(pool){return pool[Math.floor(Math.random()*pool.length)]}
+function pick3(pool){
+  var a=pool.slice(),o=[];
+  for(var i=0;i<3&&a.length;i++)o.push(a.splice(Math.floor(Math.random()*a.length),1)[0]);
+  return o;
+}
+/* 搖籤：動畫跑完才換內容，不然一瞬間就跳完，沒有「抽」的感覺 */
+function shakeThen(cb){
+  var el=$('#tube');
+  if(!S.anim||reduceMotion()||!el){buzz([14,40,18]);cb();return}
+  el.classList.remove('shaking');void el.offsetWidth;el.classList.add('shaking');
+  buzz([10,55,10,55,20]);
+  setTimeout(function(){el.classList.remove('shaking');cb()},740);
+}
+/* ── 搖手機抽籤 ──
+   iOS 13+ 的 DeviceMotionEvent 多了 requestPermission()，必須在使用者手勢裡呼叫，會跳系統對話框；
+   Android Chrome 沒有這個方法，HTTPS 下直接就能監聽。所以這裡用**有沒有那個方法**來分流，
+   不去判斷 UA——機型判斷早晚會錯，能力偵測不會。 */
+var SHAKE_TH=24, SHAKE_GAP=1500;        /* 含重力，靜止約 9.8；門檻拉高避免走路誤觸 */
+var shakeBound=false, shakeAt=0;
+function motionSupported(){return typeof window.DeviceMotionEvent!=='undefined'}
+function motionNeedsPermission(){return motionSupported()&&typeof DeviceMotionEvent.requestPermission==='function'}
+function onMotion(e){
+  var a=e.accelerationIncludingGravity||e.acceleration;if(!a)return;
+  var g=Math.sqrt((a.x||0)*(a.x||0)+(a.y||0)*(a.y||0)+(a.z||0)*(a.z||0)),now=Date.now();
+  if(g<SHAKE_TH||now-shakeAt<SHAKE_GAP)return;
+  if(S.tab!=='draw')return;                                   /* 只在求籤頁有效 */
+  if(!$('#gmodal').hidden||$('#sheet-d').classList.contains('open'))return;   /* 有東西蓋著就不抽 */
+  shakeAt=now;doDraw();
+}
+function bindShake(on){
+  if(!motionSupported())return;
+  if(on&&!shakeBound){window.addEventListener('devicemotion',onMotion);shakeBound=true}
+  else if(!on&&shakeBound){window.removeEventListener('devicemotion',onMotion);shakeBound=false}
+}
+function enableShake(after){
+  if(!motionSupported()){toast('這台裝置沒有動作感應器','warn');after&&after();return}
+  if(!motionNeedsPermission()){                               /* Android：直接開，不跳權限 */
+    S.shake=true;LS.set('sx.shake',true);buzz([14,40,18]);toast('✓ 搖手機抽籤已開啟','ok');after&&after();return}
+  DeviceMotionEvent.requestPermission().then(function(r){     /* iOS：必須在這個點擊事件裡呼叫 */
+    if(r==='granted'){S.shake=true;LS.set('sx.shake',true);toast('✓ 搖手機抽籤已開啟','ok')}
+    else{S.shake=false;LS.set('sx.shake',false);toast('系統沒有允許動作感應，無法開啟','bad')}
+    after&&after();
+  }).catch(function(){S.shake=false;LS.set('sx.shake',false);toast('無法請求動作感應權限','bad');after&&after()});
+}
+
+/* ── 問籤：只轉述規則，不給建議 ── */
+var ASKS=[['env','🧭','今天的環境怎麼樣？'],['mine','📌','我手上的該不該動？'],['what','🎋','有什麼可以看？']];
+function answer(k){
+  var m=M(),r=m.regime||{},b=m.breadth||{},c=(m.cci||{}).counts||{},f=fortune(m);
+  if(k==='env'){
+    return '<div class="ansr"><span class="t">規則判定</span>'
+      +'大盤 <b>'+esc(r.state||'—')+'</b>（'+gl('vote','票數')+' '+sgn(r.score,1)+'），多方訊號 '+gl('gate',esc((r.gate||{})['多']||'—'))
+      +'、空方訊號 '+gl('gate',esc((r.gate||{})['空']||'—'))+'。<br>'
+      +'通過完整'+gl('pine','三條件')+'的金叉今天 <b>'+(b.n==null?'—':b.n)+' 檔</b>（警示門檻 ≥'+b.cut+' 檔，'+esc(b.lvl||'')+'）。'
+      +'今日'+gl('act','可動作')+' <b>'+(c.act||0)+'</b> 檔、'+gl('cross','死叉')+' '+(c.d||0)+' 檔。<br>'
+      +'合起來就是今天的'+gl('fortune','籤')+'：<b>'+f.lv+'・'+f.nm+'</b>'
+      +'<div class="src">以上每個數字都在「戰情板 → 大盤」查得到。這是規則轉述，不是建議。</div></div>';
+  }
+  if(k==='mine'){
+    var H=holdIds(),ps=papers();
+    if(!H.length&&!ps.length)return '<div class="ansr"><span class="t">沒有東西可以掃</span>'
+      +'你還沒輸入持股，模擬倉也是空的。到「設定 → 我的持股」加進去之後，這裡會掃死叉與出場提醒。'
+      +'<div class="src">持股只存在這支手機，伺服器端不知道你持有什麼。</div></div>';
+    var hd=H.filter(function(i){return (cciOf(i)||{}).k==='d'});
+    var die=ps.filter(function(t){return pStat(t)==='open'&&(cciOf(t.id)||{}).k==='d'});
+    var pend=ps.filter(function(t){var z=pStat(t);return z==='pending'||z==='closing'});
+    var L=[];
+    if(hd.length)L.push('持股出現<b>死叉</b> '+hd.length+' 檔：'+hd.map(function(i){return esc(nameOf(i))}).join('、'));
+    if(die.length)L.push('模擬倉持倉中出現<b>死叉</b> '+die.length+' 筆：'+die.map(function(t){return esc(nameOf(t.id))}).join('、'));
+    if(pend.length)L.push(pend.length+' 筆等下一個交易日開盤成交，不用做任何事。');
+    if(!hd.length&&!die.length)L.push('持股 '+H.length+' 檔、模擬倉持倉 '+ps.filter(function(t){return pStat(t)!=='closed'}).length+' 筆，<b>今天都沒有出場訊號</b>。');
+    return '<div class="ansr"><span class="t">規則對你的部位說</span>'+L.join('<br>')
+      +'<div class="src">規則只有一句話：死叉＝出場訊號，下一個交易日開盤出場。沒出現死叉的，規則沒有任何話要說——「沒訊號」不等於「該賣」，也不等於「該加碼」。</div></div>';
+  }
+  return '';
+}
 function renderDraw(){
   var m=M(),pool=drawPool(),P=[];
-  P.push('<h2>抽籤</h2><div class="hint">從今日可動作的 <b>'+pool.length+'</b> 檔裡隨機抽一檔來看。這是探索工具：<b>隨機抽出供探索，不是推薦</b>。想抽幾次都可以。</div>');
-  P.push('<div class="setrow" style="margin:0 2px 12px"><button class="btn pri" id="btnDo" type="button">'+(S.drawn?'再抽一檔':'抽一檔')+'</button>'+(S.drawn?'<button class="btn" id="btnOpen" type="button">看完整詳情</button>':'')+'</div>');
-  if(S.drawn){var x=cciOf(S.drawn),p=(S.PX[S.mkt]||{})[S.drawn],w=(S.WX[S.mkt]||{})[S.drawn];
-    P.push('<div class="drawcard">'+(w?watchCard(w):'<div class="card" data-open="'+esc(S.drawn)+'" role="button"><div class="whead"><span class="wsym">'+showNm(S.drawn)+badges(S.drawn)+'</span></div><div class="wprice">'+fmt(x.c)+'</div><div class="stats">'+kvc('距月線',sgn(x.dev)+'%',cl(x.dev))+(p?kv('位階',fmt(p.p))+kv('量比',fmt(p.v)):'')+'</div>'+(p?'<div class="tags">'+dim6(p.dm)+' <span class="pill '+(p.side==='多'?'long':'short')+'">'+esc(p.s)+' '+esc(p.side)+'</span></div>':'')+'</div>')+cciCard(S.drawn)+'</div>');
-    P.push('<div class="acts" style="margin:0 2px 10px">'+pBtn(S.drawn)+'</div>')}
-  P.push('<div class="disc">規則判定結果，不構成投資建議。</div>');
-  $('#pg-draw').innerHTML=P.join('');
-  $('#btnDo').addEventListener('click',function(){if(!pool.length){toast('今天沒有可動作的標的');return}var pick=pool[Math.floor(Math.random()*pool.length)];S.drawn=pick.id;renderDraw();window.scrollTo(0,0)});
+  P.push('<h2>求籤</h2>');
+  P.push('<div class="ask">'+ASKS.map(function(a){
+    return '<button type="button" data-ask="'+a[0]+'" aria-pressed="'+(S.ask===a[0])+'"><span class="e">'+a[1]+'</span><span class="q">'+a[2]+'</span><span class="e">›</span></button>'}).join('')+'</div>');
+  if(S.ask&&S.ask!=='what')P.push(answer(S.ask));
+  var mx=tubeMix();
+  P.push('<div class="hint">抽籤從今日'+gl('act','可動作')+' <b>'+mx.n+' 檔</b>裡隨機抽。'
+    +'<b>隨機抽出供探索，不是推薦</b>，想抽幾次都可以。</div>');
+  P.push('<div class="brd">籤筒組成：'
+    +'<b>吉</b> 三條件金叉 '+mx.g3+'・<b>凶</b> 死叉 '+mx.d
+    +'・<b>平</b> 待金叉 '+mx.ng+'、待死叉 '+mx.nd+(mx.gn?'、金叉未滿三條件 '+mx.gn:'')
+    +'<span style="flex-basis:100%">抽到什麼面，是今天市場本來的比例決定的，不是手氣。</span></div>');
+  P.push('<div class="shrine"><div class="tube" id="tube" aria-hidden="true"><i>籤</i></div><div class="sacts">'
+    +'<button class="btn pri" id="btnDo" type="button">'+(S.drawn||S.three?'再搖一籤':'搖一籤')+'</button>'
+    +'<button class="btn" id="btn3" type="button">抽三支比較</button></div></div>');
+  if(S.shake&&shakeBound)P.push('<div class="hint" style="margin-top:-8px">也可以直接<b>搖手機</b>抽一籤（只在這一頁有效）。</div>');
+  if(S.three&&S.three.length){
+    P.push('<div class="three">'+S.three.map(function(i){var o=omen(i)||{lv:'—',cls:'mid'};
+      return '<button type="button" class="'+o.cls+'" data-pick="'+esc(i)+'" aria-pressed="'+(S.drawn===i)+'">'
+        +'<span class="l">'+o.lv+'</span><span class="s">'+esc(S.mkt==='tw'?nameOf(i):i)+'</span>'
+        +'<span class="g">距門檻<br>'+sgn((cciOf(i)||{}).gap)+'%</span></button>'}).join('')+'</div>');
+    P.push('<div class="hint" style="margin-top:-4px">點一張看完整的籤。三支都是從同一個池子隨機抽的，<b>並列不代表誰比較好</b>。</div>');
+  }
+  if(S.drawn){
+    P.push(omenCard(S.drawn,true));
+    P.push(drawStock(S.drawn));
+    P.push(cciCard(S.drawn));
+    P.push('<div class="acts" style="margin:0 2px 10px">'+pBtn(S.drawn)
+      +'<button class="btn" id="btnWx" type="button">'+(isWatch(S.drawn)?'已在觀察':'加入觀察')+'</button>'
+      +'<button class="btn" id="btnOpen" type="button">看完整詳情</button></div>');
+  }
+  P.push('<div class="disc">籤面由這一檔已經算好的訊號狀態決定，不加任何新邏輯。規則判定結果，不構成投資建議。</div>');
+  var el=$('#pg-draw');el.innerHTML=P.join('');
+  $$('[data-ask]',el).forEach(function(b){b.addEventListener('click',function(){
+    var k=b.dataset.ask;
+    if(k==='what'){S.ask=null;doDraw();return}
+    S.ask=(S.ask===k?null:k);renderDraw();})});
+  $('#btnDo').addEventListener('click',doDraw);
+  $('#btn3').addEventListener('click',doDraw3);
+  $$('[data-pick]',el).forEach(function(b){b.addEventListener('click',function(){
+    S.drawn=b.dataset.pick;buzz(18);renderDraw()})});
+  var w=$('#btnWx');if(w)w.addEventListener('click',function(){
+    if(isWatch(S.drawn)){toast('已經在觀察清單裡','warn');return}
+    var a=S.wx[S.mkt]||(S.wx[S.mkt]=[]);a.push(S.drawn);LS.set('sx.wx',S.wx);
+    buzz([14,40,18]);toast('✓ '+S.drawn+' 已加入觀察','ok');renderDraw()});
   var o=$('#btnOpen');if(o)o.addEventListener('click',function(){openDetail(S.drawn)});
+}
+function doDraw(){
+  var pool=drawPool();
+  if(!pool.length){toast('今天沒有可動作的標的','warn');return}
+  shakeThen(function(){S.three=null;S.drawn=pick(pool).id;renderDraw();
+    var c=$('#pg-draw .omen');if(c)c.scrollIntoView({block:'center'})});
+}
+function doDraw3(){
+  var pool=drawPool();
+  if(pool.length<3){toast('今天可動作的標的不到 3 檔','warn');return}
+  shakeThen(function(){S.three=pick3(pool).map(function(x){return x.id});S.drawn=null;renderDraw();
+    var c=$('#pg-draw .three');if(c)c.scrollIntoView({block:'center'})});
 }
 
 /* ═══════════ 模擬倉 ═══════════
@@ -735,7 +1115,14 @@ function renderSettings(){
   P.push('<h2>說明</h2><div class="hint">看不懂畫面上的名詞時，直接點有虛線底線的字就會跳出解釋；也可以在這裡一次看完。</div>');
   P.push('<div class="setrow"><button class="btn" id="sGl" type="button">名詞解釋（全部）</button><button class="btn" id="sOnb" type="button">重看導覽</button></div>');
   P.push('<h2>操作回饋</h2><div class="hint">按「跟單」「出場」時，按鈕會變色停一下、下方「模擬倉」分頁會彈動，另外跳一條提示。震動只有 Android 支援——iPhone 的 Safari 沒有這個功能，只會看到變色與彈動。</div>');
-  P.push('<div class="setrow"><button class="btn'+(S.buzz?' pri':'')+'" id="bzz" type="button">震動回饋：'+(S.buzz?'開':'關')+'</button></div>');
+  P.push('<div class="setrow" style="flex-wrap:wrap"><button class="btn'+(S.buzz?' pri':'')+'" id="bzz" type="button">震動回饋：'+(S.buzz?'開':'關')+'</button>'
+    +'<button class="btn'+(S.anim?' pri':'')+'" id="banm" type="button">搖籤動畫：'+(S.anim?'開':'關')+'</button></div>');
+  P.push('<div class="setrow"><button class="btn'+(S.shake?' pri':'')+'" id="bshk" type="button">搖手機抽籤：'+(S.shake?'開':'關')+'</button></div>');
+  P.push('<div class="hint">搖手機只在「求籤」那一頁有效，離開就停止監聽。'
+    +(motionNeedsPermission()
+      ?'<br>你這台是 <b>iOS</b>：第一次開會跳系統的動作感應授權對話框，拒絕的話就只能用按鈕抽。'
+      :(motionSupported()?'<br>你這台是 <b>Android／桌機</b> 這一類：不需要授權，打開就能用。'
+                        :'<br>⚠️ 這台裝置偵測不到動作感應器，開了也不會有反應。'))+'</div>');
   P.push('<h2>備份</h2><div class="hint">持股、觀察標的、<b>模擬倉</b>與<b>歷史籤</b>（兩個市場）都在這份 JSON 裡。換手機：匯出 → 貼到新手機匯入。沒有雲端。</div>');
   P.push('<div class="setrow"><button class="btn" id="bexp" type="button">匯出到剪貼簿</button><button class="btn" id="bshow" type="button">顯示 JSON</button></div>');
   P.push('<div class="setrow"><textarea id="bjson" placeholder="貼上先前匯出的 JSON，再按匯入"></textarea></div><div class="setrow"><button class="btn" id="bimp" type="button">匯入（覆蓋）</button><button class="btn danger" id="bclr" type="button">清除這支手機的資料</button></div>');
@@ -753,6 +1140,12 @@ function renderSettings(){
   $('#sOnb').addEventListener('click',function(){showOnb()});
   $('#bzz').addEventListener('click',function(){S.buzz=!S.buzz;LS.set('sx.buzz',S.buzz);
     if(S.buzz)buzz([18,45,22]);toast('震動回饋已'+(S.buzz?'開啟':'關閉'),S.buzz?'ok':'warn');renderSettings()});
+  $('#banm').addEventListener('click',function(){S.anim=!S.anim;LS.set('sx.anim',S.anim);
+    toast('搖籤動畫已'+(S.anim?'開啟':'關閉'),S.anim?'ok':'warn');renderSettings()});
+  $('#bshk').addEventListener('click',function(){
+    if(S.shake){S.shake=false;LS.set('sx.shake',false);bindShake(false);toast('搖手機抽籤已關閉','warn');renderSettings();return}
+    enableShake(renderSettings);          /* 權限一定要在這個點擊事件裡請求，不能延後 */
+  });
   $('#bimp').addEventListener('click',function(){try{var j=JSON.parse($('#bjson').value);if(!j||typeof j!=='object')throw 0;S.hold=j.hold||{us:[],tw:[]};S.wx=j.wx||{us:[],tw:[]};S.paper=j.paper||{us:[],tw:[]};S.hist=j.hist||{us:[],tw:[]};save();savePaper();LS.set('sx.hist',S.hist);toast('已匯入','ok');renderSettings()}catch(e){toast('JSON 格式不對')}});
   $('#bclr').addEventListener('click',function(){if(!confirm('清除這支手機上的持股、觀察標的、模擬倉與歷史籤？'))return;S.hold={us:[],tw:[]};S.wx={us:[],tw:[]};S.paper={us:[],tw:[]};S.hist={us:[],tw:[]};save();savePaper();LS.set('sx.hist',S.hist);toast('已清除','bad');renderSettings()});
 }
@@ -800,6 +1193,7 @@ function render(){
   var nOpen=papers().filter(function(t){return pStat(t)!=='closed'}).length;
   var nb=$('nav button[data-tab="paper"]');
   var bd=nb.querySelector('.bdg');if(nb){if(nOpen){if(!bd){bd=document.createElement('span');bd.className='bdg';nb.appendChild(bd)}bd.textContent=nOpen}else if(bd)bd.remove()}
+  bindShake(S.shake&&S.tab==='draw');       /* 只在求籤頁監聽，離開就卸掉 */
   ({home:renderHome,board:renderBoard,draw:renderDraw,paper:renderPaper,settings:renderSettings}[S.tab]||renderHome)();
 }
 $$('#mkseg button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.mk===S.mkt))});

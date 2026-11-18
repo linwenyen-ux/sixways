@@ -2,7 +2,9 @@
    頁面本體與 data/*.json 走「網路優先」：資料每天換，快取優先會看到昨天的籤。
    d/ 詳情檔走「快取優先、背景更新」：點進去不等待，下次自動換新。
    殼件（css／icons／manifest）走快取優先。 */
-const V = 'sixways-v1';
+/* 殼件（base.css 等）是「快取優先、背景更新」：改了 CSS 的那一次部署，使用者會先看到舊的，
+   下次才換新。所以**只要動到 SHELL 裡的檔案就要把 V 往上加**，activate 會清掉舊快取、整批重抓。 */
+const V = 'sixways-v2';
 const SHELL = ['./', './index.html', './base.css', './manifest.json',
   './icons/icon-192.png', './icons/icon-512.png',
   './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
