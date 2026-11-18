@@ -82,6 +82,11 @@ nav .bdg.ping{animation:bdgping .85s ease}
 .stats .v .code{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em;margin-top:1px}
 .fortune .lv{letter-spacing:.08em}
 
+/* base.css 只擋 section[hidden]；.onb／.gmd 是 div 又自己設了 display:flex，
+   class 規則的優先權高過瀏覽器預設的 [hidden]{display:none}，所以 hidden 屬性會完全失效
+   ——導覽關掉後整頁被一層空白蓋住。這條補起來。 */
+[hidden]{display:none!important}
+
 /* ── 名詞解釋：有虛線底線的字可以點 ── */
 .gl{border-bottom:1px dotted var(--accent);cursor:pointer;color:inherit}
 .gmd{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center}
